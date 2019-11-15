@@ -69,7 +69,7 @@ public class TeamCode extends LinearOpMode {
       M_ChainRight = hardwareMap.get(DcMotor.class, "");
       S_Claw = hardwareMap.get(Servo.class, "");
       S_Tray1 = hardwareMap.get(Servo.class, "");
-      S_Tray2 = = hardwareMap.get(Servo.class, "");
+      S_Tray2 = hardwareMap.get(Servo.class, "");
       //Reset Motor encoders
       M_BackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
       M_BackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -88,8 +88,8 @@ public class TeamCode extends LinearOpMode {
       //Example: .setDirection(DcMotor.Direction.FORWARD);
     }
     double ServoCheckAngle(double Angle){
-      static final double MAX_POS     =  1.0;     // Maximum rotational position
-      static final double MIN_POS     =  0.0;     // Minimum rotational position
+      final double MAX_POS     =  1.0;     // Maximum rotational position
+      final double MIN_POS     =  0.0;     // Minimum rotational position
       if(Angle > MAX_POS){
         Angle = MAX_POS;
       }else if(Angle < MIN_POS){
