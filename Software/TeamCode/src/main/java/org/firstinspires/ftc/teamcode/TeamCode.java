@@ -7,15 +7,17 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.hardware.CompassSensor;
 
-@TeleOp(name="Basic: Linear OpMode", group="Linear Opmode")
+@TeleOp(name="Team Code 1", group="Linear Opmode")
 @Disabled
 public class TeamCode extends LinearOpMode {
 
     private ElapsedTime runtime = new ElapsedTime();
-    CompassSensor compass;
+
+    private static final float ServoClawClosedPosition = 0.0f;
+    private static final float ServoClawOpenedPosition = 1.0f;
+    private static final float ServoTrayClosedPosition = 0.0f;
+    private static final float ServoTrayOpenedPosition = 1.0f;
 
     //Declaring the hardware
     private DcMotor M_BackLeft = null;
@@ -36,14 +38,6 @@ public class TeamCode extends LinearOpMode {
 
         initMotors();
 
-        //Just Compass Stuff
-        compass = hardwareMap.get(CompassSensor.class, "compass");
-        compass.setMode(CompassSensor.CompassMode.CALIBRATION_MODE);
-        compass.setMode(CompassSensor.CompassMode.MEASUREMENT_MODE);
-        if (compass.calibrationFailed()) telemetry.addData("Compass", "Calibration Failed. Try Again!");
-        else telemetry.addData("Compass", "Calibration Passed.");
-        telemetry.update();
-
 
         telemetry.addData("Status", "Init Done");
         telemetry.update();
@@ -53,13 +47,43 @@ public class TeamCode extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {//Main Loop
 
+          //Control the robot from joystick 1
+          //Later for meccano wheel, both joystick will be used.
+          double drive = -gamepad1.left_stick_y;
+          double turn  =  gamepad1.left_stick_x;
+          double leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
+          double rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
+          M_BackLeft.setPower(leftPower);
+          M_BackRight.setPower(rightPower);
+          M_FrontLeft.setPower(leftPower);
+          M_FrontRight.setPower(rightPower);
+          //Control the arm from the joystick
+          double armPower = Range.clip(-gamepad1.right_stick_y, -1.0, 1.0) ;
+          M_ChainLeft.setPower(armPower);
+          M_ChainRight.setPower(armPower);
+          //Controlling the Claw
+          if(gamepad1.left_bumper){
+              S_Claw.setPosition(ServoClawClosedPosition);
+          }
+          if(gamepad1.right_bumper){
+              S_Claw.setPosition(ServoClawOpenedPosition);
+          }
+          //Controlling the Tray servos
+          if(gamepad1.dpad_down){
+              S_Tray1.setPosition(ServoTrayClosedPosition);
+              S_Tray2.setPosition(ServoTrayClosedPosition);
+          }
+          if(gamepad1.dpad_up){
+              S_Tray1.setPosition(ServoTrayOpenedPosition);
+              S_Tray2.setPosition(ServoTrayOpenedPosition);
+          }
 
         }
         telemetry.addData("Status", "Finished");
         telemetry.update();
     }
 
-    void initMotors(){
+    private void initMotors(){
       //Hardware to software mapping
       M_BackLeft = hardwareMap.get(DcMotor.class, "");
       M_BackRight = hardwareMap.get(DcMotor.class, "");
@@ -87,14 +111,5 @@ public class TeamCode extends LinearOpMode {
       //Setting the Motor Direction, If needed
       //Example: .setDirection(DcMotor.Direction.FORWARD);
     }
-    double ServoCheckAngle(double Angle){
-      final double MAX_POS     =  1.0;     // Maximum rotational position
-      final double MIN_POS     =  0.0;     // Minimum rotational position
-      if(Angle > MAX_POS){
-        Angle = MAX_POS;
-      }else if(Angle < MIN_POS){
-        Angle = MIN_POS;
-      }
-      return Angle;
-    }
+
 }
