@@ -16,8 +16,12 @@ public class TeamCode extends LinearOpMode {
 
     private static final float ServoClawClosedPosition = 0.0f;
     private static final float ServoClawOpenedPosition = 1.0f;
-    private static final float ServoTrayClosedPosition = 0.0f;
-    private static final float ServoTrayOpenedPosition = 1.0f;
+    private static final float ServoTrayLeftClosedPosition = 0.0f;
+    private static final float ServoTrayLeftOpenedPosition = 1.0f;
+    private static final float ServoTrayRightClosedPosition = 0.0f;
+    private static final float ServoTrayRightOpenedPosition = 1.0f;
+    private static final float ServoClawExtenderClosedPosition = 0.0f;
+    private static final float ServoClawExtenderOpenedPosition = 1.0f;
 
     //Declaring the hardware
     private DcMotor M_BackLeft = null;
@@ -27,6 +31,7 @@ public class TeamCode extends LinearOpMode {
     private DcMotor M_ChainLeft = null;
     private DcMotor M_ChainRight = null;
     private Servo S_Claw = null;
+    private Servo S_ClawExtender = null;
     private Servo S_Tray1 = null;
     private Servo S_Tray2 = null;
 
@@ -70,12 +75,18 @@ public class TeamCode extends LinearOpMode {
           }
           //Controlling the Tray servos
           if(gamepad1.dpad_down){
-              S_Tray1.setPosition(ServoTrayClosedPosition);
-              S_Tray2.setPosition(ServoTrayClosedPosition);
+              S_Tray1.setPosition(ServoTrayLeftClosedPosition);
+              S_Tray2.setPosition(ServoTrayRightClosedPosition);
           }
           if(gamepad1.dpad_up){
-              S_Tray1.setPosition(ServoTrayOpenedPosition);
-              S_Tray2.setPosition(ServoTrayOpenedPosition);
+              S_Tray1.setPosition(ServoTrayLeftOpenedPosition);
+              S_Tray2.setPosition(ServoTrayRightOpenedPosition);
+          }
+          if(gamepad1.dpad_left){
+            S_ClawExtender.setPosition(ServoClawExtenderClosedPosition);
+          }
+          if(gamepad1.dpad_right){
+            S_ClawExtender.setPosition(ServoClawExtenderOpenedPosition);
           }
 
         }
@@ -94,6 +105,7 @@ public class TeamCode extends LinearOpMode {
       S_Claw = hardwareMap.get(Servo.class, "");
       S_Tray1 = hardwareMap.get(Servo.class, "");
       S_Tray2 = hardwareMap.get(Servo.class, "");
+      S_ClawExtender = hardwareMap.get(Servo.class, "");
       //Reset Motor encoders
       M_BackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
       M_BackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
