@@ -8,8 +8,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@TeleOp(name="Team Code 1", group="Linear Opmode")
-@Disabled
+@TeleOp(name="Team Code 1", group="Base")
 public class TeamCode extends LinearOpMode {
 
     private ElapsedTime runtime = new ElapsedTime();
