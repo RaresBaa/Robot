@@ -11,15 +11,6 @@ public class Controlled01 extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
     RobotHardware hardware = new RobotHardware();
 
-    private static final float ServoClawClosedPosition = 0.0f;
-    private static final float ServoClawOpenedPosition = 1.0f;
-    private static final float ServoTrayLeftClosedPosition = 0.0f;
-    private static final float ServoTrayLeftOpenedPosition = 1.0f;
-    private static final float ServoTrayRightClosedPosition = 0.0f;
-    private static final float ServoTrayRightOpenedPosition = 1.0f;
-    private static final float ServoClawExtenderClosedPosition = 0.0f;
-    private static final float ServoClawExtenderOpenedPosition = 1.0f;
-
     @Override
     public void runOpMode() {
         telemetry.addData("Status", "Initialized");
@@ -52,25 +43,23 @@ public class Controlled01 extends LinearOpMode {
           hardware.M_ChainRight.setPower(armPower);
           //Controlling the Claw
           if(gamepad1.left_bumper){
-              hardware.S_Claw.setPosition(ServoClawClosedPosition);
+              hardware.CloseClaw();
           }
           if(gamepad1.right_bumper){
-              hardware.S_Claw.setPosition(ServoClawOpenedPosition);
+              hardware.OpenClaw();
           }
           //Controlling the Tray servos
           if(gamepad1.dpad_down){
-              hardware.S_Tray1.setPosition(ServoTrayLeftClosedPosition);
-              hardware.S_Tray2.setPosition(ServoTrayRightClosedPosition);
+              hardware.UnhookTray();
           }
           if(gamepad1.dpad_up){
-              hardware.S_Tray1.setPosition(ServoTrayLeftOpenedPosition);
-              hardware.S_Tray2.setPosition(ServoTrayRightOpenedPosition);
+              hardware.HookTray();
           }
           if(gamepad1.dpad_left){
-            hardware.S_ClawExtender.setPosition(ServoClawExtenderClosedPosition);
+            hardware.RetractClaw();
           }
           if(gamepad1.dpad_right){
-            hardware.S_ClawExtender.setPosition(ServoClawExtenderOpenedPosition);
+            hardware.ExtendClaw();
           }
 
         }

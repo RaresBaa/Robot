@@ -24,4 +24,6 @@ Thumbs.db
 .gradle
 build/
 
+VuforiaKey.java
+
 *ASUS_PC_01*
