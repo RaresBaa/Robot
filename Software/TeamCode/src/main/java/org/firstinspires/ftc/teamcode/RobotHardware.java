@@ -5,7 +5,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.LightSensor;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 
@@ -51,19 +50,19 @@ public class RobotHardware {
     }
     void init(HardwareMap hwMap){
         //Hardware to software mapping
-        webcamName = hwMap.get(WebcamName.class, "");
-        lightSensor = hwMap.lightSensor.get("");
-        compass = hwMap.get(CompassSensor.class, "");
-        M_BackLeft = hwMap.get(DcMotor.class, "");
-        M_BackRight = hwMap.get(DcMotor.class, "");
-        M_FrontLeft = hwMap.get(DcMotor.class, "");
-        M_FrontRight = hwMap.get(DcMotor.class, "");
-        M_ChainLeft = hwMap.get(DcMotor.class, "");
-        M_ChainRight = hwMap.get(DcMotor.class, "");
-        S_Claw = hwMap.get(Servo.class, "");
-        S_Tray1 = hwMap.get(Servo.class, "");
-        S_Tray2 = hwMap.get(Servo.class, "");
-        S_ClawExtender = hwMap.get(Servo.class, "");
+        //webcamName = hwMap.get(WebcamName.class, "webcam");
+        lightSensor = hwMap.lightSensor.get("lightSensor");
+        compass = hwMap.get(CompassSensor.class, "compass");
+        M_BackLeft = hwMap.get(DcMotor.class, "motorBackLeft");
+        M_BackRight = hwMap.get(DcMotor.class, "motorBackRight");
+        M_FrontLeft = hwMap.get(DcMotor.class, "motorFrontLeft");
+        M_FrontRight = hwMap.get(DcMotor.class, "motorFrontRight");
+        M_ChainLeft = hwMap.get(DcMotor.class, "motorChainLeft");
+        M_ChainRight = hwMap.get(DcMotor.class, "motorChainRight");
+        S_Claw = hwMap.get(Servo.class, "servoClaw");
+        S_Tray1 = hwMap.get(Servo.class, "servoTrayLeft");
+        S_Tray2 = hwMap.get(Servo.class, "servoTrayRight");
+        S_ClawExtender = hwMap.get(Servo.class, "servoClawExtender");
 
         compass.setMode(CompassSensor.CompassMode.CALIBRATION_MODE);
         lightSensor.enableLed(true);
