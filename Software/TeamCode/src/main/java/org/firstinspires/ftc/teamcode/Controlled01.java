@@ -94,7 +94,7 @@ public class Controlled01 extends LinearOpMode {
           }
           if(gamepad1.dpad_up){
               hardware.HookTray();
-              telemetry.addData("Claw", true);
+              telemetry.addData("Tray", true);
           }
           if(gamepad1.dpad_left){
             hardware.RetractClaw();
