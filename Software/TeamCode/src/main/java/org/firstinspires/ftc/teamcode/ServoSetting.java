@@ -9,7 +9,8 @@ public class ServoSetting extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        Servo servo = hardwareMap.get(Servo.class, "servo");
+        Servo servo;
+        servo = hardwareMap.get(Servo.class, "servo");
         double pos = 0.5;
         servo.setPosition(pos);
         telemetry.addData("Info", "Started");
@@ -33,9 +34,6 @@ public class ServoSetting extends LinearOpMode {
                 telemetry.addData("Servo pos:", pos);
                 telemetry.update();
             }
-        }
-        telemetry.addData(">", "Done");
-        telemetry.update();
         }
     }
 }

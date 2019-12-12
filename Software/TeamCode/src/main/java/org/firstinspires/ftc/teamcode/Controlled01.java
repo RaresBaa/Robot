@@ -64,26 +64,24 @@ public class Controlled01 extends LinearOpMode {
 
           telemetry.addData("Left Power", leftPower);
           telemetry.addData("Right Power", rightPower);
-          telemetry.addData("Compass", hardware.compass.getDirection());
-          telemetry.addData("Light", hardware.lightSensor.getLightDetected() );
 
           hardware.M_BackLeft.setPower(leftPower);
           hardware.M_BackRight.setPower(rightPower);
           hardware.M_FrontLeft.setPower(leftPower);
           hardware.M_FrontRight.setPower(rightPower);
           //Control the arm from the joystick
-          double armPower = Range.clip(-gamepad1.right_stick_y, -1.0, 1.0) ;
+          double armPower = Range.clip(-gamepad2.right_stick_y, -1.0, 1.0) ;
 
           telemetry.addData("Arm Power", armPower);
 
           hardware.M_ChainLeft.setPower(armPower);
           hardware.M_ChainRight.setPower(armPower);
           //Controlling the Claw
-          if(gamepad1.left_bumper){
+          if(gamepad2.dpad_up){
               hardware.CloseClaw();
               telemetry.addData("Claw", true);
           }
-          if(gamepad1.right_bumper){
+          if(gamepad2.dpad_down){
               hardware.OpenClaw();
               telemetry.addData("Claw", false);
           }

@@ -50,9 +50,9 @@ public class RobotHardware {
     }
     void init(HardwareMap hwMap){
         //Hardware to software mapping
-        //webcamName = hwMap.get(WebcamName.class, "webcam");
-        lightSensor = hwMap.lightSensor.get("lightSensor");
-        compass = hwMap.get(CompassSensor.class, "compass");
+        webcamName = hwMap.get(WebcamName.class, "webcam");
+        //lightSensor = hwMap.lightSensor.get("lightSensor");
+        //compass = hwMap.get(CompassSensor.class, "compass");
         M_BackLeft = hwMap.get(DcMotor.class, "motorBackLeft");
         M_BackRight = hwMap.get(DcMotor.class, "motorBackRight");
         M_FrontLeft = hwMap.get(DcMotor.class, "motorFrontLeft");
@@ -64,8 +64,8 @@ public class RobotHardware {
         S_Tray2 = hwMap.get(Servo.class, "servoTrayRight");
         S_ClawExtender = hwMap.get(Servo.class, "servoClawExtender");
 
-        compass.setMode(CompassSensor.CompassMode.CALIBRATION_MODE);
-        lightSensor.enableLed(true);
+        //compass.setMode(CompassSensor.CompassMode.CALIBRATION_MODE);
+        //lightSensor.enableLed(true);
 
         //Reset Motor encoders
         M_BackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
