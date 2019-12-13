@@ -163,7 +163,6 @@ public class BasicAutonomous01 extends LinearOpMode {
             else {
                 telemetry.addData("Visible Target", "none");
             }
-            //telemetry.addData("Compass", hardware.compass.getDirection());
             //telemetry.addData("Light", hardware.lightSensor.getLightDetected());
 
             telemetry.update();

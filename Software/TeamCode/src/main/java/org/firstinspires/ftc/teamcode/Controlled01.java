@@ -4,6 +4,8 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
@@ -53,8 +55,10 @@ public class Controlled01 extends LinearOpMode {
 
           //Control the robot from joystick 1
           //Later for mecanum wheels, both joysticks will be used.
-          double drive = -gamepad1.left_stick_y;
-          double turn  =  gamepad1.left_stick_x;
+          double drive = -gamepad1.left_stick_x;
+          double turn  =  gamepad1.left_stick_y;
+          telemetry.addData("Motor Power", drive);
+          telemetry.addData("Motor Turn", turn);
 
           logGamepad(telemetry, gamepad1, "gamepad1");
           logGamepad(telemetry, gamepad2, "gamepad2");
@@ -70,40 +74,61 @@ public class Controlled01 extends LinearOpMode {
           hardware.M_FrontLeft.setPower(leftPower);
           hardware.M_FrontRight.setPower(rightPower);
           //Control the arm from the joystick
-          double armPower = Range.clip(-gamepad2.right_stick_y, -1.0, 1.0) ;
+          double armPower = Range.clip(-gamepad1.right_stick_x, -1.0, 1.0) ;
 
           telemetry.addData("Arm Power", armPower);
 
           hardware.M_ChainLeft.setPower(armPower);
           hardware.M_ChainRight.setPower(armPower);
           //Controlling the Claw
-          if(gamepad2.dpad_up){
-              hardware.CloseClaw();
-              telemetry.addData("Claw", true);
-          }
-          if(gamepad2.dpad_down){
-              hardware.OpenClaw();
-              telemetry.addData("Claw", false);
+
+            if(gamepad1.left_bumper || (gamepad1.left_trigger > 0.5f)){
+                if(gamepad1.left_bumper){
+                    hardware.S_Claw.setDirection(DcMotor.Direction.FORWARD);
+                    telemetry.addData("Claw", true);
+                }
+                if(gamepad1.left_trigger > 0.5f){
+                    hardware.S_Claw.setDirection(DcMotor.Direction.REVERSE);
+                    telemetry.addData("Claw", false);
+                }
+                hardware.S_Claw.setPower(1.0f);
+            } else{
+              hardware.S_Claw.setPower(0.0f);
           }
           //Controlling the Tray servos
-          if(gamepad1.dpad_down){
-              hardware.UnhookTray();
-              telemetry.addData("Tray", false);
-          }
-          if(gamepad1.dpad_up){
-              hardware.HookTray();
-              telemetry.addData("Tray", true);
-          }
-          if(gamepad1.dpad_left){
-            hardware.RetractClaw();
-            telemetry.addData("Extended", false);
-          }
-          if(gamepad1.dpad_right){
-            hardware.ExtendClaw();
-            telemetry.addData("Extended", true);
-          }
-          telemetry.update();
+            if(gamepad1.right_bumper || (gamepad1.right_trigger >0.5f)) {
+                if (gamepad1.right_bumper) {
+                    telemetry.addData("Tray", false);
+                    hardware.S_Tray1.setDirection(DcMotorSimple.Direction.FORWARD);
+                    hardware.S_Tray2.setDirection(DcMotorSimple.Direction.REVERSE);
+                }
+                if (gamepad1.right_trigger > 0.5f) {
+                    telemetry.addData("Tray", true);
+                    hardware.S_Tray1.setDirection(DcMotorSimple.Direction.REVERSE);
+                    hardware.S_Tray2.setDirection(DcMotorSimple.Direction.FORWARD);
+                }
+                hardware.S_Tray1.setPower(1.0f);
+                hardware.S_Tray2.setPower(1.0f);
+            }else{
+                hardware.S_Tray1.setPower(0.0f);
+                hardware.S_Tray2.setPower(0.0f);
+            }
+            //Claw extender
+            if(gamepad1.y || gamepad1.b) {
+                if (gamepad1.y) {
+                    telemetry.addData("Extended", false);
+                    hardware.S_ClawExtender.setDirection(DcMotorSimple.Direction.FORWARD);
+                }
+                if (gamepad1.b) {
+                    telemetry.addData("Extended", true);
+                    hardware.S_ClawExtender.setDirection(DcMotorSimple.Direction.REVERSE);
+                }
+                hardware.S_ClawExtender.setPower(1.0f);
+            }else{
+                hardware.S_ClawExtender.setPower(0.0f);
 
+            }
+          telemetry.update();
         }
         telemetry.addData("Status", "Finished");
         telemetry.update();
