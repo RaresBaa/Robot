@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -48,8 +49,10 @@ public class BasicAutonomous01 extends LinearOpMode {
     public void runOpMode() {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
-        //Main INIT code goes here
         hardware.init(hardwareMap);
+
+        FtcDashboard dashboard = FtcDashboard.getInstance();
+        telemetry = new MultipleTelemetry(telemetry, dashboard.getTelemetry());
 
         //Vuforia Configuration
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -57,8 +60,8 @@ public class BasicAutonomous01 extends LinearOpMode {
         parameters.vuforiaLicenseKey = VuforiaKey.KEY;
         parameters.cameraName = hardware.webcamName;
         VuforiaLocalizer vuforia = ClassFactory.getInstance().createVuforia(parameters);
-        // Load the data sets for the trackable objects.
 
+        // Load the data sets for the trackable objects.
         VuforiaTrackables targetsSkyStone = vuforia.loadTrackablesFromAsset("Skystone");
         VuforiaTrackable stoneTarget = targetsSkyStone.get(0);
         stoneTarget.setName("Stone Target");
@@ -119,7 +122,7 @@ public class BasicAutonomous01 extends LinearOpMode {
             phoneXRotate = 90 ;
         }
         float phoneZRotate = 0;
-        OpenGLMatrix robotFromCamera = OpenGLMatrix.translation(hardware.CAMERA_FORWARD_DISPLACEMENT, hardware.CAMERA_LEFT_DISPLACEMENT, hardware.CAMERA_VERTICAL_DISPLACEMENT)
+        OpenGLMatrix robotFromCamera = OpenGLMatrix.translation(Configuration.CAMERA_FORWARD_DISPLACEMENT, Configuration.CAMERA_LEFT_DISPLACEMENT, Configuration.CAMERA_VERTICAL_DISPLACEMENT)
                 .multiplied(Orientation.getRotationMatrix(EXTRINSIC, YZX, DEGREES, phoneYRotate, phoneZRotate, phoneXRotate));
 
         for (VuforiaTrackable trackable : allTrackables) {
@@ -128,7 +131,7 @@ public class BasicAutonomous01 extends LinearOpMode {
         targetsSkyStone.activate();
 
         //Streaming vuforia to /dash
-        FtcDashboard.getInstance().startCameraStream(vuforia, 0);
+        dashboard.startCameraStream(vuforia, 0);
 
 
         telemetry.addData("Status", "Init Done");

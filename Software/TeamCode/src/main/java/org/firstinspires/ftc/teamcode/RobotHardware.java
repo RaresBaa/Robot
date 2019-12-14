@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.LightSensor;
 
@@ -9,10 +10,6 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 
 
 public class RobotHardware {
-
-    //for the light sensor
-    static final double     WHITE_THRESHOLD = 0.2;  // spans between 0.1 - 0.5 from dark to light
-    static final double     APPROACH_SPEED  = 0.5;
 
     DcMotor M_BackLeft = null;
     DcMotor M_BackRight = null;
@@ -26,10 +23,6 @@ public class RobotHardware {
     CRServo S_ClawExtender = null;
     CRServo S_Tray1 = null;
     CRServo S_Tray2 = null;
-    private static final float mmPerInch        = 25.4f;
-    final float CAMERA_FORWARD_DISPLACEMENT  = 4.0f * mmPerInch;   // eg: Camera is 4 Inches in front of robot-center
-    final float CAMERA_VERTICAL_DISPLACEMENT = 8.0f * mmPerInch;   // eg: Camera is 8 Inches above ground
-    final float CAMERA_LEFT_DISPLACEMENT     = 0;     // eg: Camera is ON the robot's center line
 
     /* Constructor */
     RobotHardware(){
@@ -70,6 +63,7 @@ public class RobotHardware {
 
         //Setting the Motor Direction, If needed
         //Example: .setDirection(DcMotor.Direction.FORWARD /REVERSE);
+        M_ChainLeft.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
 }
