@@ -23,6 +23,10 @@ public class Configuration {
     public static double pidJoystick_Y_D = 0.0;
 
     public static double pidArmPower_P = 0.5;
-    public static double pidArmPower_I = 0;
+    public static double pidArmPower_I = 0.00003;
     public static double pidArmPower_D = 0;
+    public static double pidArmPower_T = 5;
+    public static double ClawMaxHeight = 40;
+    public static double ClawMinHeight = 10;
+    public static  double ClawJoystickSensibility = 0.1;
 }

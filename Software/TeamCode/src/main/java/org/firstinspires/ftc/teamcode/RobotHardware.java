@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.LightSensor;
 
@@ -17,12 +18,13 @@ public class RobotHardware {
     DcMotor M_FrontRight = null;
     DcMotor M_ChainLeft = null;
     DcMotor M_ChainRight = null;
-    LightSensor lightSensor = null;
+    LightSensor LightSensor = null;
     WebcamName webcamName = null;
     CRServo S_Claw = null;
     CRServo S_ClawExtender = null;
     CRServo S_Tray1 = null;
     CRServo S_Tray2 = null;
+    DistanceSensor HeightSensor = null;
 
     /* Constructor */
     RobotHardware(){
@@ -31,7 +33,8 @@ public class RobotHardware {
     void init(HardwareMap hwMap){
         //Hardware to software mapping
         webcamName = hwMap.get(WebcamName.class, "webcam");
-        //lightSensor = hwMap.lightSensor.get("lightSensor");
+        HeightSensor = hwMap.get(DistanceSensor.class, "sensor_range");
+        //LightSensor = hwMap.lightSensor.get("sensor_light");
         M_BackLeft = hwMap.get(DcMotor.class, "motorBackLeft");
         M_BackRight = hwMap.get(DcMotor.class, "motorBackRight");
         M_FrontLeft = hwMap.get(DcMotor.class, "motorFrontLeft");
