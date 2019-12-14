@@ -8,9 +8,10 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.LightSensor;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 
 
-public class RobotHardware {
+class RobotHardware {
 
     DcMotor M_BackLeft = null;
     DcMotor M_BackRight = null;
@@ -19,12 +20,13 @@ public class RobotHardware {
     DcMotor M_ChainLeft = null;
     DcMotor M_ChainRight = null;
     LightSensor LightSensor = null;
-    WebcamName webcamName = null;
     CRServo S_Claw = null;
     CRServo S_ClawExtender = null;
     CRServo S_Tray1 = null;
     CRServo S_Tray2 = null;
     DistanceSensor HeightSensor = null;
+
+    VuforiaLocalizer.Parameters VuforiaParams;
 
     /* Constructor */
     RobotHardware(){
@@ -32,7 +34,7 @@ public class RobotHardware {
     }
     void init(HardwareMap hwMap){
         //Hardware to software mapping
-        webcamName = hwMap.get(WebcamName.class, "webcam");
+        WebcamName webcamName = hwMap.get(WebcamName.class, "webcam");
         HeightSensor = hwMap.get(DistanceSensor.class, "sensor_range");
         //LightSensor = hwMap.lightSensor.get("sensor_light");
         M_BackLeft = hwMap.get(DcMotor.class, "motorBackLeft");
@@ -45,6 +47,11 @@ public class RobotHardware {
         S_Tray1 = hwMap.get(CRServo.class, "servoTrayLeft");
         S_Tray2 = hwMap.get(CRServo.class, "servoTrayRight");
         S_ClawExtender = hwMap.get(CRServo.class, "servoClawExtender");
+
+        int cameraMonitorViewId = hwMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hwMap.appContext.getPackageName());
+        VuforiaLocalizer.Parameters VuforiaParams = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+        VuforiaParams.vuforiaLicenseKey = VuforiaKey.KEY;
+        VuforiaParams.cameraName = webcamName;
 
         //lightSensor.enableLed(true);
 
@@ -65,7 +72,6 @@ public class RobotHardware {
         M_ChainRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         //Setting the Motor Direction, If needed
-        //Example: .setDirection(DcMotor.Direction.FORWARD /REVERSE);
         M_ChainLeft.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
