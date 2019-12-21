@@ -5,9 +5,12 @@ import com.acmerobotics.dashboard.config.Config;
 @Config
 public class Configuration {
 
-    //for the light sensor
-    public static double     WHITE_THRESHOLD = 0.2;  // spans between 0.1 - 0.5 from dark to light
-    public static double     APPROACH_SPEED  = 0.5;
+    public static int AutonomousFrontDistance = 50;
+    public static int AutonomousRotateDistance = 10;
+    public static int AutonomousOffTheWall = 10;
+    public static float AutonomousLightTapeMin = 0.3f;
+    public static float AutonomousLightTapeMax = 0.5f;
+    public static long AutonomousWaitBeforeMovesMilis = 2000;
 
     private static final float mmPerInch        = 25.4f;
     public static float CAMERA_FORWARD_DISPLACEMENT  = 8.85f * mmPerInch;   // eg: Camera is 4 Inches in front of robot-center

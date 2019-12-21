@@ -36,7 +36,7 @@ class RobotHardware {
         //Hardware to software mapping
         WebcamName webcamName = hwMap.get(WebcamName.class, "webcam");
         HeightSensor = hwMap.get(DistanceSensor.class, "sensor_range");
-        //LightSensor = hwMap.lightSensor.get("sensor_light");
+        LightSensor = hwMap.lightSensor.get("sensor_light");
         M_BackLeft = hwMap.get(DcMotor.class, "motorBackLeft");
         M_BackRight = hwMap.get(DcMotor.class, "motorBackRight");
         M_FrontLeft = hwMap.get(DcMotor.class, "motorFrontLeft");
@@ -53,7 +53,7 @@ class RobotHardware {
         VuforiaParams.vuforiaLicenseKey = VuforiaKey.KEY;
         VuforiaParams.cameraName = webcamName;
 
-        //lightSensor.enableLed(true);
+        LightSensor.enableLed(true);
 
         //Reset Motor encoders
         M_BackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
