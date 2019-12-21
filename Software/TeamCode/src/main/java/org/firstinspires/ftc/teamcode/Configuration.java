@@ -14,16 +14,11 @@ public class Configuration {
     public static float CAMERA_VERTICAL_DISPLACEMENT = 7.0f * mmPerInch;   // eg: Camera is 8 Inches above ground
     public static float CAMERA_LEFT_DISPLACEMENT     = -5.31f * mmPerInch;     // eg: Camera is ON the robot's center line
 
-    public static double pidJoystick_X_P = 0.5;
-    public static double pidJoystick_X_I = 0.0;
-    public static double pidJoystick_X_D = 0.0;
-
-    public static double pidJoystick_Y_P = 0.5;
-    public static double pidJoystick_Y_I = 0.0;
-    public static double pidJoystick_Y_D = 0.0;
+    public static float joystickXsensitivity = 1.0f;
+    public static float joystickYsensitivity = 1.0f;
 
     public static double pidArmPower_P = 0.5;
-    public static double pidArmPower_I = 0.00003;
+    public static double pidArmPower_I = 5;
     public static double pidArmPower_D = 0;
     public static double pidArmPower_T = 5;
     public static double ClawMaxHeight = 40;

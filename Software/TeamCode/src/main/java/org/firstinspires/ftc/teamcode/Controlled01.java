@@ -17,7 +17,7 @@ public class Controlled01 extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
     private RobotHardware hardware = new RobotHardware();
 
-    private PIDController pidJoystick_X, pidJoystick_Y, pidArmPower, clawHeight;
+    private PIDController pidArmPower;
 
     @Override
     public void runOpMode() {
@@ -25,18 +25,9 @@ public class Controlled01 extends LinearOpMode {
         telemetry.update();
         hardware.init(hardwareMap);
 
-        pidJoystick_X = new PIDController(Configuration.pidJoystick_X_P, Configuration.pidJoystick_X_I, Configuration.pidJoystick_X_D);
-        pidJoystick_Y = new PIDController(Configuration.pidJoystick_Y_P, Configuration.pidJoystick_Y_I, Configuration.pidJoystick_Y_D);
         pidArmPower = new PIDController(Configuration.pidArmPower_P, Configuration.pidArmPower_I, Configuration.pidArmPower_D);
-
-        pidJoystick_X.setOutputRange(-1.0,1.0);
-        pidJoystick_Y.setOutputRange(-1.0,1.0);
         pidArmPower.setOutputRange(-1.0,1.0);
-        pidJoystick_X.setInputRange(-1.0,1.0);
-        pidJoystick_Y.setInputRange(-1.0,1.0);
         pidArmPower.setInputRange(-1.0,1.0);
-        pidJoystick_X.enable();
-        pidJoystick_Y.enable();
         pidArmPower.enable();
 
         FtcDashboard dashboard = FtcDashboard.getInstance();
@@ -50,9 +41,10 @@ public class Controlled01 extends LinearOpMode {
         waitForStart();
         runtime.reset();
         while (opModeIsActive()) {//Main Loop
-            drive = -pidJoystick_X.performPID(gamepad1.left_stick_x);
-            turn  =  pidJoystick_Y.performPID(gamepad1.left_stick_y);
+            drive = -gamepad1.left_stick_x * Configuration.joystickXsensitivity;
+            turn  = gamepad1.left_stick_y * Configuration.joystickYsensitivity;
             clawHeight = hardware.HeightSensor.getDistance(DistanceUnit.CM);
+
             leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
             rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
 
@@ -64,7 +56,7 @@ public class Controlled01 extends LinearOpMode {
 
             pidArmPower.reset();
             pidArmPower.setSetpoint(SetArmHeight);
-            pidArmPower.setInputRange(0.0, Configuration.ClawMaxHeight);
+            pidArmPower.setInputRange(Configuration.ClawMinHeight, Configuration.ClawMaxHeight);
             pidArmPower.setOutputRange(-1.0,1.0);
             pidArmPower.setTolerance(Configuration.pidArmPower_T);
             pidArmPower.enable();
@@ -77,7 +69,6 @@ public class Controlled01 extends LinearOpMode {
             hardware.M_ChainLeft.setPower(armPower);
             hardware.M_ChainRight.setPower(armPower);
 
-
             telemetry.addData("Motor Joystick X", gamepad1.left_stick_x);
             telemetry.addData("Motor Joystick Y", gamepad1.left_stick_y);
             telemetry.addData("Tuned Motor Joystick X", drive);
@@ -88,6 +79,12 @@ public class Controlled01 extends LinearOpMode {
             telemetry.addData("SET Arm Height", SetArmHeight);
             telemetry.addData("Arm Stick", joystickArmStick);
             telemetry.addData("Arm Power", armPower);
+            telemetry.addData("Motor Distance-BL", hardware.M_BackLeft.getCurrentPosition());
+            telemetry.addData("Motor Distance-BR", hardware.M_BackRight.getCurrentPosition());
+            telemetry.addData("Motor Distance-FL", hardware.M_FrontLeft.getCurrentPosition());
+            telemetry.addData("Motor Distance-FR", hardware.M_FrontRight.getCurrentPosition());
+            telemetry.addData("Motor Distance-CL", hardware.M_ChainLeft.getCurrentPosition());
+            telemetry.addData("Motor Distance-CR", hardware.M_ChainRight.getCurrentPosition());
 
             //Claw controls
             if(gamepad1.left_bumper || (gamepad1.left_trigger > 0.5f)){
