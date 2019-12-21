@@ -8,8 +8,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 
 
-@Autonomous(name="ParkFrontRight", group="Base")
-public class AutonomousParkFrontRight extends LinearOpMode {
+@Autonomous(name="GetTrayParkRight", group="Base")
+public class AutonomousGetTrayParkRight extends LinearOpMode {
 
     private ElapsedTime runtime = new ElapsedTime();
     private RobotHardware hardware = new RobotHardware();
@@ -28,11 +28,35 @@ public class AutonomousParkFrontRight extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
-        //Getting Forward a little bit
-        hardware.M_BackRight.setTargetPosition(hardware.M_BackRight.getCurrentPosition() + Configuration.AutonomousFrontDistance);
-        hardware.M_BackLeft.setTargetPosition(hardware.M_BackLeft.getCurrentPosition() + Configuration.AutonomousFrontDistance);
-        hardware.M_FrontRight.setTargetPosition(hardware.M_FrontRight.getCurrentPosition() + Configuration.AutonomousFrontDistance);
-        hardware.M_FrontLeft.setTargetPosition(hardware.M_FrontLeft.getCurrentPosition() + Configuration.AutonomousFrontDistance);
+
+        //Go to the tray
+        hardware.M_BackRight.setTargetPosition(hardware.M_BackRight.getCurrentPosition() + Configuration.AutonomousTrayDistance);
+        hardware.M_BackLeft.setTargetPosition(hardware.M_BackLeft.getCurrentPosition() + Configuration.AutonomousTrayDistance);
+        hardware.M_FrontRight.setTargetPosition(hardware.M_FrontRight.getCurrentPosition() + Configuration.AutonomousTrayDistance);
+        hardware.M_FrontLeft.setTargetPosition(hardware.M_FrontLeft.getCurrentPosition() + Configuration.AutonomousTrayDistance);
+        //Deploy  Tray Servos
+        hardware.S_Tray1.setPower(1.0);
+        hardware.S_Tray2.setPower(1.0);
+        wait(Configuration.AutonomousTrayServoDeployTime);
+        hardware.S_Tray1.setPower(0);
+        hardware.S_Tray2.setPower(0);
+        // go back with the tray
+        hardware.M_BackRight.setTargetPosition(hardware.M_BackRight.getCurrentPosition() + Configuration.AutonomousBackWithTrayDistance);
+        hardware.M_BackLeft.setTargetPosition(hardware.M_BackLeft.getCurrentPosition() + Configuration.AutonomousBackWithTrayDistance);
+        hardware.M_FrontRight.setTargetPosition(hardware.M_FrontRight.getCurrentPosition() + Configuration.AutonomousBackWithTrayDistance);
+        hardware.M_FrontLeft.setTargetPosition(hardware.M_FrontLeft.getCurrentPosition() + Configuration.AutonomousBackWithTrayDistance);
+        wait(Configuration.AutonomousWaitBeforeMovesMilis);
+        //unhook tray
+        hardware.S_Tray1.setPower(-1.0);
+        hardware.S_Tray2.setPower(-1.0);
+        wait(Configuration.AutonomousTrayServoDeployTime);
+        hardware.S_Tray1.setPower(0);
+        hardware.S_Tray2.setPower(0);
+        //get a little distance from the tray
+        hardware.M_BackRight.setTargetPosition(hardware.M_BackRight.getCurrentPosition() - Configuration.AutonomousOffTheWall);
+        hardware.M_BackLeft.setTargetPosition(hardware.M_BackLeft.getCurrentPosition() - Configuration.AutonomousOffTheWall);
+        hardware.M_FrontRight.setTargetPosition(hardware.M_FrontRight.getCurrentPosition() - Configuration.AutonomousOffTheWall);
+        hardware.M_FrontLeft.setTargetPosition(hardware.M_FrontLeft.getCurrentPosition() - Configuration.AutonomousOffTheWall);
         wait(Configuration.AutonomousWaitBeforeMovesMilis);
         //turning to 90' degrees
         hardware.M_FrontLeft.setTargetPosition(hardware.M_FrontLeft.getCurrentPosition() + Configuration.AutonomousRotateDistance);
