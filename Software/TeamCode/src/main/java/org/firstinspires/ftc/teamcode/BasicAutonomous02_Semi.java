@@ -17,6 +17,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGREES;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XYZ;
@@ -33,6 +34,13 @@ public class BasicAutonomous02_Semi extends LinearOpMode {
     private static boolean TeamSide = false;
     // 1-for left side, 0-for right side
     private static boolean TeamQuadrant = false;
+    //Locations for the BlueTray, RedTray, BluePark, RedPark;
+    private final VectorF BlueTrayLocation = new VectorF(10,10,0);
+    private final VectorF RedTrayLocation = new VectorF(20,20,0);
+    private final VectorF BlueParkLocation = new VectorF(20,20,0);
+    private final VectorF RedParkLocation = new VectorF(20,20,0);
+    private final VectorF BlueTraySpotLocation = new VectorF(1,2,0);
+    private final VectorF RedTraySpotLocation = new VectorF(3, 4);
 
     //Vuforia Constants
     private boolean targetVisible;
@@ -56,44 +64,14 @@ public class BasicAutonomous02_Semi extends LinearOpMode {
         //Streaming vuforia to /dash
         dashboard.startCameraStream(vuforia,0);
 
-        //We do this once to find out which team we are and where in the field
-        telemetry.addData("Trackable Name", vuforiaLocation(AllObjects));
-        VectorF translation = lastLocation.getTranslation();
-        Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
-        float xPos = translation.get(0);
-        float yPos = translation.get(1);
-        telemetry.addData("Pos (cm)", "{X, Y, Z} = %.1f, %.1f, %.1f", xPos, yPos, translation.get(2));
-        telemetry.addData("Rot (deg)", "{Roll, Pitch, Heading} = %.0f, %.0f, %.0f", rotation.firstAngle, rotation.secondAngle, rotation.thirdAngle);
-        /*
-         If you are standing in the Red Alliance Station looking towards the center of the field,
-              - The X axis runs from your left to the right. (positive from the center to the right)
-              - The Y axis runs from the Red Alliance Station towards the other side of the field
-                  where the Blue Alliance Station is. (Positive is from the center, towards the BlueAlliance station)
+        //In order to not block the while loop, we step through the blocking instructions
+        int step = 0;
 
-        Team-Side 1-for blue, 0-for red
-        Team_Quadrant 1-for left side, 0-for right side
-        */
-        if(xPos < 0 && yPos < 0){
-            //Red Team, Left
-            TeamSide = false;
-            TeamQuadrant =true;
-        }else if(xPos > 0 && yPos < 0){
-            //Red Team, Right
-            TeamSide = false;
-            TeamQuadrant = false;
-        }else if(xPos > 0 && yPos > 0){
-            //Blue Team, Left
-            TeamSide = true;
-            TeamQuadrant = true;
-        }else if(xPos < 0 && yPos > 0) {
-            //Blue Team. Right
-            TeamSide = true;
-            TeamQuadrant = false;
-        }
-        telemetry.addData("Sides", (TeamSide) ? "Blue" : "Red");
-        telemetry.addData("Quadrant", (TeamQuadrant) ? "Left Side" : "Right Side");
-
-
+        VectorF TrayLocation = new VectorF(0,0,0);
+        VectorF ParkLocation = new VectorF(0,0,0);
+        VectorF TraySpotLocation = new VectorF(0,0,0);
+        long ServoTime = 0;
+        boolean TraySide = true;
 
         telemetry.addData("Status", "Init Done");
         telemetry.update();
@@ -101,13 +79,126 @@ public class BasicAutonomous02_Semi extends LinearOpMode {
         runtime.reset();
         while (opModeIsActive()) {//Main Loop
             telemetry.addData("Trackable Name", vuforiaLocation(AllObjects));
-            translation = lastLocation.getTranslation();
-            rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
+            VectorF translation = lastLocation.getTranslation();
+            Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
+            float xPos = translation.get(0);
+            float yPos = translation.get(1);
+
+            switch(step){
+                case 0://Figuring in which quadrant we are, and which team
+                     /*
+                    If you are standing in the Red Alliance Station looking towards the center of the field,
+                     - The X axis runs from your left to the right. (positive from the center to the right)
+                     - The Y axis runs from the Red Alliance Station towards the other side of the field
+                         where the Blue Alliance Station is. (Positive is from the center, towards the BlueAlliance station)
+
+                    Team-Side 1-for blue, 0-for red
+                    Team_Quadrant 1-for left side, 0-for right side
+                    */
+                    if(xPos < 0 && yPos < 0){
+                        //Red Team, Left
+                        TeamSide = false;
+                        TeamQuadrant =true;
+                    }else if(xPos > 0 && yPos < 0){
+                        //Red Team, Right
+                        TeamSide = false;
+                        TeamQuadrant = false;
+                    }else if(xPos > 0 && yPos > 0){
+                        //Blue Team, Left
+                        TeamSide = true;
+                        TeamQuadrant = true;
+                    }else if(xPos < 0 && yPos > 0) {
+                        //Blue Team. Right
+                        TeamSide = true;
+                        TeamQuadrant = false;
+                    }
+                    TraySide = xPos < 0;
+                    if(targetVisible){
+                        step++;
+                    }
+                    break;
+                case 1://Setting the Location Variables
+
+                    if(TeamSide){//blue
+                        TrayLocation = BlueTrayLocation;
+                        ParkLocation = BlueParkLocation;
+                        TraySpotLocation = BlueTraySpotLocation;
+                    }else if(!TeamSide){//red
+                        TrayLocation = RedTrayLocation;
+                        ParkLocation = RedParkLocation;
+                        TraySpotLocation = RedTraySpotLocation;
+                    }
+                    step++;
+                    break;
+                case 2://Going to the tray if we are in the tray area
+                    if(TraySide){
+                        //the distance remaning to the Tray
+                        float xDis = xPos - TrayLocation.get(0);
+                        float yDis = yPos - TrayLocation.get(1);
 
 
+                        if(xDis == 0 && yDis == 0){
+                            step++;
+                        }
+                    }
+                    break;
+                case 3://Deploying tray servos
+                    if(TraySide) {
+                        hardware.S_Tray1.setPower(1.0f);
+                        hardware.S_Tray2.setPower(1.0f);
+                        ServoTime = runtime.now(TimeUnit.MILLISECONDS);
+                        step++;
+                    }
+                    break;
+                case 4://Stopping the servos from moving
+                case 7:
+                    if(TraySide) {
+                        if (ServoTime + Configuration.AutonomousTrayServoDeployTime >= runtime.now(TimeUnit.MILLISECONDS)) {
+                            hardware.S_Tray1.setPower(0);
+                            hardware.S_Tray2.setPower(0);
+                            step++;
+                        }
+                    }
+                    break;
+                case 5://going back with the tray
+                    if(TraySide) {
+                        //the distance remaning to the tray spot
+                        float xDis = xPos - TraySpotLocation.get(0);
+                        float yDis = yPos - TraySpotLocation.get(1);
+
+
+                        if (xDis == 0 && yDis == 0) {
+                            step++;
+                        }
+                    }
+                    break;
+                case 6://Lifting the Servos
+                    if(TraySide) {
+                        hardware.S_Tray1.setPower(-1.0f);
+                        hardware.S_Tray2.setPower(-1.0f);
+                        ServoTime = runtime.now(TimeUnit.MILLISECONDS);
+                        step++;
+                    }
+                    break;
+                case 8://Parking
+                    float xDis = xPos - ParkLocation.get(0);
+                    float yDis = yPos = ParkLocation.get(1);
+
+
+                    if(xDis == 0 && yDis ==0){
+                        step++;
+                    }
+                    break;
+                default:
+                    telemetry.addData("Status", "Finished the switch.");
+                    break;
+            }
 
             telemetry.addData("Sides", (TeamSide) ? "Blue" : "Red");
             telemetry.addData("Quadrant", (TeamQuadrant) ? "Left Side" : "Right Side");
+            telemetry.addData("Target Visible", targetVisible);
+            telemetry.addData("Tray Location", "{X, Y, Z} = %.1f, %.1f, %.1f", TrayLocation.get(0), TrayLocation.get(1), TrayLocation.get(2));
+            telemetry.addData("Park Location", "{X, Y, Z} = %.1f, %.1f, %.1f", ParkLocation.get(0), ParkLocation.get(1), ParkLocation.get(2));
             telemetry.addData("Pos (cm)", "{X, Y, Z} = %.1f, %.1f, %.1f", translation.get(0), translation.get(1), translation.get(2));
             telemetry.addData("Rot (deg)", "{Roll, Pitch, Heading} = %.0f, %.0f, %.0f", rotation.firstAngle, rotation.secondAngle, rotation.thirdAngle);
             telemetry.addData("Motor Distance-BL", hardware.M_BackLeft.getCurrentPosition());
