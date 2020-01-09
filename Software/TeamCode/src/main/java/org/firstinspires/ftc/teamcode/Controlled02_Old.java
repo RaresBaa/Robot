@@ -6,34 +6,16 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 @TeleOp(name="Controlled02_Old", group="Base")
 public class Controlled02_Old extends LinearOpMode {
 
     private ElapsedTime runtime = new ElapsedTime();
     RobotHardware hardware = new RobotHardware();
-
-    private static void logGamepad(Telemetry telemetry, Gamepad gamepad, String prefix) {
-        telemetry.addData(prefix + "Synthetic",
-                gamepad.getGamepadId() == Gamepad.ID_UNASSOCIATED);
-        for (Field field : gamepad.getClass().getFields()) {
-            if (Modifier.isStatic(field.getModifiers())) continue;
-
-            try {
-                telemetry.addData(prefix + field.getName(), field.get(gamepad));
-            } catch (IllegalAccessException e) {
-                // ignore for now
-            }
-        }
-    }
 
     @Override
     public void runOpMode() {
@@ -60,11 +42,13 @@ public class Controlled02_Old extends LinearOpMode {
             telemetry.addData("Motor Power", drive);
             telemetry.addData("Motor Turn", turn);
 
-            logGamepad(telemetry, gamepad1, "gamepad1");
-            logGamepad(telemetry, gamepad2, "gamepad2");
+            double drive_fine = -gamepad2.left_stick_x / Configuration.joystickFINEsensitivity;
+            double turn_fine  =  gamepad2.left_stick_y / Configuration.joystickFINEsensitivity;
+            telemetry.addData("Motor Power-Fine", drive_fine);
+            telemetry.addData("Motor Turn-Fine", turn_fine);
 
-            double leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
-            double rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
+            double leftPower    = Range.clip(drive + turn + drive_fine + turn_fine, -1.0, 1.0) ;
+            double rightPower   = Range.clip(drive - turn + drive_fine - turn_fine, -1.0, 1.0) ;
 
             telemetry.addData("Left Power", leftPower);
             telemetry.addData("Right Power", rightPower);
@@ -74,20 +58,20 @@ public class Controlled02_Old extends LinearOpMode {
             hardware.M_FrontLeft.setPower(leftPower);
             hardware.M_FrontRight.setPower(rightPower);
             //Control the arm from the joystick
-            double armPower = Range.clip(-gamepad1.right_stick_x, -1.0, 1.0) ;
+            double armPower = Range.clip(-gamepad2.right_stick_x, -1.0, 1.0) ;
 
             telemetry.addData("Arm Power", armPower);
 
             hardware.M_ChainLeft.setPower(armPower);
             hardware.M_ChainRight.setPower(armPower);
-            //Controlling the Claw
 
-            if(gamepad1.left_bumper || (gamepad1.left_trigger > 0.5f)){
-                if(gamepad1.left_bumper){
+            //Controlling the Claw
+            if((gamepad2.right_trigger > 0.5f) || (gamepad2.left_trigger > 0.5f)){
+                if((gamepad2.right_trigger > 0.5f)){
                     hardware.S_Claw.setDirection(DcMotor.Direction.FORWARD);
                     telemetry.addData("Claw", true);
                 }
-                if(gamepad1.left_trigger > 0.5f){
+                if(gamepad2.left_trigger > 0.5f){
                     hardware.S_Claw.setDirection(DcMotor.Direction.REVERSE);
                     telemetry.addData("Claw", false);
                 }
@@ -96,13 +80,13 @@ public class Controlled02_Old extends LinearOpMode {
                 hardware.S_Claw.setPower(0.0f);
             }
             //Controlling the Tray servos
-            if(gamepad1.right_bumper || (gamepad1.right_trigger >0.5f)) {
-                if (gamepad1.right_bumper) {
+            if(gamepad2.right_bumper || gamepad2.left_bumper) {
+                if (gamepad2.left_bumper) {
                     telemetry.addData("Tray", false);
                     hardware.S_Tray1.setDirection(DcMotorSimple.Direction.FORWARD);
                     hardware.S_Tray2.setDirection(DcMotorSimple.Direction.REVERSE);
                 }
-                if (gamepad1.right_trigger > 0.5f) {
+                if (gamepad2.right_bumper) {
                     telemetry.addData("Tray", true);
                     hardware.S_Tray1.setDirection(DcMotorSimple.Direction.REVERSE);
                     hardware.S_Tray2.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -114,12 +98,12 @@ public class Controlled02_Old extends LinearOpMode {
                 hardware.S_Tray2.setPower(0.0f);
             }
             //Claw extender
-            if(gamepad1.y || gamepad1.b) {
-                if (gamepad1.y) {
+            if(gamepad2.a || gamepad2.b) {
+                if (gamepad2.a) {
                     telemetry.addData("Extended", false);
                     hardware.S_ClawExtender.setDirection(DcMotorSimple.Direction.FORWARD);
                 }
-                if (gamepad1.b) {
+                if (gamepad2.b) {
                     telemetry.addData("Extended", true);
                     hardware.S_ClawExtender.setDirection(DcMotorSimple.Direction.REVERSE);
                 }
@@ -128,6 +112,17 @@ public class Controlled02_Old extends LinearOpMode {
                 hardware.S_ClawExtender.setPower(0.0f);
 
             }
+            telemetry.addData("Distance_Sensor", hardware.HeightSensor.getDistance(DistanceUnit.CM));
+            telemetry.addData("Light-alpha", hardware.ColorSensor.alpha());
+            telemetry.addData("Light-Red", hardware.ColorSensor.red());
+            telemetry.addData("Light-Green", hardware.ColorSensor.green());
+            telemetry.addData("Light-Blue", hardware.ColorSensor.blue());
+            telemetry.addData("Motor Distance-BL", hardware.M_BackLeft.getCurrentPosition());
+            telemetry.addData("Motor Distance-BR", hardware.M_BackRight.getCurrentPosition());
+            telemetry.addData("Motor Distance-FL", hardware.M_FrontLeft.getCurrentPosition());
+            telemetry.addData("Motor Distance-FR", hardware.M_FrontRight.getCurrentPosition());
+            telemetry.addData("Motor Distance-CL", hardware.M_ChainLeft.getCurrentPosition());
+            telemetry.addData("Motor Distance-CR", hardware.M_ChainRight.getCurrentPosition());
             telemetry.update();
         }
         telemetry.addData("Status", "Finished");

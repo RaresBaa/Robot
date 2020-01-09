@@ -46,7 +46,7 @@ public class AutonomousParkFrontRight extends LinearOpMode {
 
         while (opModeIsActive()) {//Main Loop
             //Going until we see the tape below
-            double Light = hardware.LightSensor.getLightDetected();
+            double Light = hardware.ColorSensor.red() + hardware.ColorSensor.blue();
             if(Light < Configuration.AutonomousLightTapeMax && Light > Configuration.AutonomousLightTapeMin){
                 hardware.M_FrontLeft.setPower(0);
                 hardware.M_FrontRight.setPower(0);

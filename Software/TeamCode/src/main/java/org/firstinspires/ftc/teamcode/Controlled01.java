@@ -43,10 +43,13 @@ public class Controlled01 extends LinearOpMode {
         while (opModeIsActive()) {//Main Loop
             drive = -gamepad1.left_stick_x * Configuration.joystickXsensitivity;
             turn  = gamepad1.left_stick_y * Configuration.joystickYsensitivity;
+            double drive_fine = -gamepad2.left_stick_x / Configuration.joystickFINEsensitivity;
+            double turn_fine  =  gamepad2.left_stick_y / Configuration.joystickFINEsensitivity;
+
             clawHeight = hardware.HeightSensor.getDistance(DistanceUnit.CM);
 
-            leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
-            rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
+            leftPower    = Range.clip(drive + turn + drive_fine + turn_fine, -1.0, 1.0) ;
+            rightPower   = Range.clip(drive - turn + drive_fine - turn_fine, -1.0, 1.0) ;
 
             //setting the SetClawHeight by joystick
             joystickArmStick = gamepad1.right_stick_x;
@@ -71,8 +74,10 @@ public class Controlled01 extends LinearOpMode {
 
             telemetry.addData("Motor Joystick X", gamepad1.left_stick_x);
             telemetry.addData("Motor Joystick Y", gamepad1.left_stick_y);
-            telemetry.addData("Tuned Motor Joystick X", drive);
-            telemetry.addData("Tuned Motor Joystick Y", turn);
+            telemetry.addData("Motor Power", drive);
+            telemetry.addData("Motor Turn", turn);
+            telemetry.addData("Motor Power-Fine", drive_fine);
+            telemetry.addData("Motor Turn-Fine", turn_fine);
             telemetry.addData("Left Power", leftPower);
             telemetry.addData("Right Power", rightPower);
             telemetry.addData("Arm Height", clawHeight);
@@ -86,28 +91,28 @@ public class Controlled01 extends LinearOpMode {
             telemetry.addData("Motor Distance-CL", hardware.M_ChainLeft.getCurrentPosition());
             telemetry.addData("Motor Distance-CR", hardware.M_ChainRight.getCurrentPosition());
 
-            //Claw controls
-            if(gamepad1.left_bumper || (gamepad1.left_trigger > 0.5f)){
-                if(gamepad1.left_bumper){
+            //Controlling the Claw
+            if((gamepad2.right_trigger > 0.5f) || (gamepad2.left_trigger > 0.5f)){
+                if((gamepad2.right_trigger > 0.5f)){
                     hardware.S_Claw.setDirection(DcMotor.Direction.FORWARD);
                     telemetry.addData("Claw", true);
                 }
-                if(gamepad1.left_trigger > 0.5f){
+                if(gamepad2.left_trigger > 0.5f){
                     hardware.S_Claw.setDirection(DcMotor.Direction.REVERSE);
                     telemetry.addData("Claw", false);
                 }
                 hardware.S_Claw.setPower(1.0f);
             } else{
-              hardware.S_Claw.setPower(0.0f);
+                hardware.S_Claw.setPower(0.0f);
             }
-            //Tray Servo controls
-            if(gamepad1.right_bumper || (gamepad1.right_trigger >0.5f)) {
-                if (gamepad1.right_bumper) {
+            //Controlling the Tray servos
+            if(gamepad2.right_bumper || gamepad2.left_bumper) {
+                if (gamepad2.left_bumper) {
                     telemetry.addData("Tray", false);
                     hardware.S_Tray1.setDirection(DcMotorSimple.Direction.FORWARD);
                     hardware.S_Tray2.setDirection(DcMotorSimple.Direction.REVERSE);
                 }
-                if (gamepad1.right_trigger > 0.5f) {
+                if (gamepad2.right_bumper) {
                     telemetry.addData("Tray", true);
                     hardware.S_Tray1.setDirection(DcMotorSimple.Direction.REVERSE);
                     hardware.S_Tray2.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -118,20 +123,19 @@ public class Controlled01 extends LinearOpMode {
                 hardware.S_Tray1.setPower(0.0f);
                 hardware.S_Tray2.setPower(0.0f);
             }
-            //Claw extender controls
-            if(gamepad1.y || gamepad1.b) {
-                if (gamepad1.y) {
-                    telemetry.addData("Extender", false);
+            //Claw extender
+            if(gamepad2.a || gamepad2.b) {
+                if (gamepad2.a) {
+                    telemetry.addData("Extended", false);
                     hardware.S_ClawExtender.setDirection(DcMotorSimple.Direction.FORWARD);
                 }
-                if (gamepad1.b) {
-                    telemetry.addData("Extender", true);
+                if (gamepad2.b) {
+                    telemetry.addData("Extended", true);
                     hardware.S_ClawExtender.setDirection(DcMotorSimple.Direction.REVERSE);
                 }
                 hardware.S_ClawExtender.setPower(1.0f);
             }else{
                 hardware.S_ClawExtender.setPower(0.0f);
-
             }
           telemetry.update();
         }

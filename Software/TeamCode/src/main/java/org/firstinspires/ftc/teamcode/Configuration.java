@@ -13,7 +13,7 @@ public class Configuration {
     public static float AutonomousLightTapeMin = 0.3f;
     public static float AutonomousLightTapeMax = 0.5f;
     public static long AutonomousWaitBeforeMovesMilis = 2000;
-    public static long AutonomousTrayServoDeployTime = 1000;
+    public static long AutonomousTrayServoDeployTime = 300;
 
     private static final float mmPerInch        = 25.4f;
     public static float CAMERA_FORWARD_DISPLACEMENT  = 8.85f * mmPerInch;   // eg: Camera is 4 Inches in front of robot-center
@@ -22,6 +22,7 @@ public class Configuration {
 
     public static float joystickXsensitivity = 1.0f;
     public static float joystickYsensitivity = 1.0f;
+    public static float joystickFINEsensitivity = 5.0f;
 
     public static double pidArmPower_P = 0.5;
     public static double pidArmPower_I = 5;

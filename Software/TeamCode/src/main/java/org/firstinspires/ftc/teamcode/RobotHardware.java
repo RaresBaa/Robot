@@ -1,11 +1,11 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.LightSensor;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
@@ -19,12 +19,12 @@ class RobotHardware {
     DcMotor M_FrontRight = null;
     DcMotor M_ChainLeft = null;
     DcMotor M_ChainRight = null;
-    LightSensor LightSensor = null;
     CRServo S_Claw = null;
     CRServo S_ClawExtender = null;
     CRServo S_Tray1 = null;
     CRServo S_Tray2 = null;
     DistanceSensor HeightSensor = null;
+    ColorSensor ColorSensor = null;
 
     VuforiaLocalizer.Parameters VuforiaParams;
 
@@ -35,8 +35,8 @@ class RobotHardware {
     void init(HardwareMap hwMap){
         //Hardware to software mapping
         WebcamName webcamName = hwMap.get(WebcamName.class, "webcam");
-        HeightSensor = hwMap.get(DistanceSensor.class, "sensor_range");
-        LightSensor = hwMap.lightSensor.get("sensor_light");
+        HeightSensor = hwMap.get(DistanceSensor.class, "sensorDistance");
+        ColorSensor = hwMap.get(ColorSensor.class, "sensorColor");
         M_BackLeft = hwMap.get(DcMotor.class, "motorBackLeft");
         M_BackRight = hwMap.get(DcMotor.class, "motorBackRight");
         M_FrontLeft = hwMap.get(DcMotor.class, "motorFrontLeft");
@@ -53,7 +53,6 @@ class RobotHardware {
         VuforiaParams.vuforiaLicenseKey = VuforiaKey.KEY;
         VuforiaParams.cameraName = webcamName;
 
-        LightSensor.enableLed(true);
 
         //Reset Motor encoders
         M_BackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
