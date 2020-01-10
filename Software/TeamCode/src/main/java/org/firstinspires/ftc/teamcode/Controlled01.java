@@ -34,7 +34,7 @@ public class Controlled01 extends LinearOpMode {
         telemetry = new MultipleTelemetry(telemetry, dashboard.getTelemetry());
 
         double drive, turn, leftPower, rightPower, joystickArmStick, armPower, clawHeight;
-        double SetArmHeight = 10;
+        double SetArmHeight = 25;
 
         telemetry.addData("Status", "Init Done");
         telemetry.update();
@@ -43,8 +43,8 @@ public class Controlled01 extends LinearOpMode {
         while (opModeIsActive()) {//Main Loop
             drive = -gamepad1.left_stick_x * Configuration.joystickXsensitivity;
             turn  = gamepad1.left_stick_y * Configuration.joystickYsensitivity;
-            double drive_fine = -gamepad2.left_stick_x / Configuration.joystickFINEsensitivity;
-            double turn_fine  =  gamepad2.left_stick_y / Configuration.joystickFINEsensitivity;
+            double drive_fine = -gamepad1.right_stick_x / Configuration.joystickFINEsensitivity;
+            double turn_fine  =  gamepad1.right_stick_y / Configuration.joystickFINEsensitivity;
 
             clawHeight = hardware.HeightSensor.getDistance(DistanceUnit.CM);
 

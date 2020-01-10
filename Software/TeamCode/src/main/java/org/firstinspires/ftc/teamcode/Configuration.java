@@ -5,14 +5,13 @@ import com.acmerobotics.dashboard.config.Config;
 @Config
 public class Configuration {
 
-    public static int AutonomousFrontDistance = 50;
-    public static int AutonomousRotateDistance = 10;
-    public static int AutonomousOffTheWall = 10;
-    public static int AutonomousTrayDistance = 30;
-    public static int AutonomousBackWithTrayDistance = 35;
-    public static float AutonomousLightTapeMin = 0.3f;
-    public static float AutonomousLightTapeMax = 0.5f;
-    public static long AutonomousWaitBeforeMovesMilis = 2000;
+    public static int AutonomousFrontDistance = 500;
+    public static int AutonomousRotateDistance = 100;
+    public static int AutonomousOffTheWall = 100;
+    public static int AutonomousTrayDistance = 300;
+    public static int AutonomousBackWithTrayDistance = 350;
+    public static float AutonomousLightTape = 380f;
+    public static long AutonomousWaitBeforeMovesMilis = 1000;
     public static long AutonomousTrayServoDeployTime = 300;
 
     private static final float mmPerInch        = 25.4f;
@@ -24,8 +23,10 @@ public class Configuration {
     public static float joystickYsensitivity = 1.0f;
     public static float joystickFINEsensitivity = 5.0f;
 
-    public static double pidArmPower_P = 0.5;
-    public static double pidArmPower_I = 5;
+    public static double ClawMotorMinSpeed = 0.02;
+
+    public static double pidArmPower_P = 0.1;
+    public static double pidArmPower_I = 0;
     public static double pidArmPower_D = 0;
     public static double pidArmPower_T = 5;
     public static double ClawMaxHeight = 40;

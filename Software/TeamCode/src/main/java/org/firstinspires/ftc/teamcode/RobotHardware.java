@@ -1,10 +1,10 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -23,7 +23,7 @@ class RobotHardware {
     CRServo S_ClawExtender = null;
     CRServo S_Tray1 = null;
     CRServo S_Tray2 = null;
-    DistanceSensor HeightSensor = null;
+    Rev2mDistanceSensor HeightSensor = null;
     ColorSensor ColorSensor = null;
 
     VuforiaLocalizer.Parameters VuforiaParams;
@@ -35,7 +35,7 @@ class RobotHardware {
     void init(HardwareMap hwMap){
         //Hardware to software mapping
         WebcamName webcamName = hwMap.get(WebcamName.class, "webcam");
-        HeightSensor = hwMap.get(DistanceSensor.class, "sensorDistance");
+        HeightSensor = hwMap.get(Rev2mDistanceSensor.class, "sensorDistance");
         ColorSensor = hwMap.get(ColorSensor.class, "sensorColor");
         M_BackLeft = hwMap.get(DcMotor.class, "motorBackLeft");
         M_BackRight = hwMap.get(DcMotor.class, "motorBackRight");

@@ -14,6 +14,11 @@ public class AutonomousGetTrayParkRight extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
     private RobotHardware hardware = new RobotHardware();
 
+    private void waita(double millis){
+        double timeNow = runtime.milliseconds();
+        while((timeNow + millis) < runtime.milliseconds()){}
+    }
+
     @Override
     public void runOpMode() throws InterruptedException {
         telemetry.addData("Status", "Initialized");
@@ -37,7 +42,7 @@ public class AutonomousGetTrayParkRight extends LinearOpMode {
         //Deploy  Tray Servos
         hardware.S_Tray1.setPower(1.0);
         hardware.S_Tray2.setPower(1.0);
-        wait(Configuration.AutonomousTrayServoDeployTime);
+        waita(Configuration.AutonomousTrayServoDeployTime);
         hardware.S_Tray1.setPower(0);
         hardware.S_Tray2.setPower(0);
         // go back with the tray
@@ -45,11 +50,11 @@ public class AutonomousGetTrayParkRight extends LinearOpMode {
         hardware.M_BackLeft.setTargetPosition(hardware.M_BackLeft.getCurrentPosition() + Configuration.AutonomousBackWithTrayDistance);
         hardware.M_FrontRight.setTargetPosition(hardware.M_FrontRight.getCurrentPosition() + Configuration.AutonomousBackWithTrayDistance);
         hardware.M_FrontLeft.setTargetPosition(hardware.M_FrontLeft.getCurrentPosition() + Configuration.AutonomousBackWithTrayDistance);
-        wait(Configuration.AutonomousWaitBeforeMovesMilis);
+        waita(Configuration.AutonomousWaitBeforeMovesMilis);
         //unhook tray
         hardware.S_Tray1.setPower(-1.0);
         hardware.S_Tray2.setPower(-1.0);
-        wait(Configuration.AutonomousTrayServoDeployTime);
+        waita(Configuration.AutonomousTrayServoDeployTime);
         hardware.S_Tray1.setPower(0);
         hardware.S_Tray2.setPower(0);
         //get a little distance from the tray
@@ -57,11 +62,11 @@ public class AutonomousGetTrayParkRight extends LinearOpMode {
         hardware.M_BackLeft.setTargetPosition(hardware.M_BackLeft.getCurrentPosition() - Configuration.AutonomousOffTheWall);
         hardware.M_FrontRight.setTargetPosition(hardware.M_FrontRight.getCurrentPosition() - Configuration.AutonomousOffTheWall);
         hardware.M_FrontLeft.setTargetPosition(hardware.M_FrontLeft.getCurrentPosition() - Configuration.AutonomousOffTheWall);
-        wait(Configuration.AutonomousWaitBeforeMovesMilis);
+        waita(Configuration.AutonomousWaitBeforeMovesMilis);
         //turning to 90' degrees
         hardware.M_FrontLeft.setTargetPosition(hardware.M_FrontLeft.getCurrentPosition() + Configuration.AutonomousRotateDistance);
         hardware.M_BackLeft.setTargetPosition(hardware.M_BackLeft.getCurrentPosition() + Configuration.AutonomousRotateDistance);
-        wait(Configuration.AutonomousWaitBeforeMovesMilis);
+        waita(Configuration.AutonomousWaitBeforeMovesMilis);
         //going full speed
         hardware.M_FrontLeft.setPower(1);
         hardware.M_FrontRight.setPower(1);
@@ -70,15 +75,15 @@ public class AutonomousGetTrayParkRight extends LinearOpMode {
 
         while (opModeIsActive()) {//Main Loop
             //Going until we see the tape below
-            double Light = hardware.ColorSensor.red() + hardware.ColorSensor.blue();
-            if(Light < Configuration.AutonomousLightTapeMax && Light > Configuration.AutonomousLightTapeMin){
+            if(hardware.ColorSensor.red() >= Configuration.AutonomousLightTape || hardware.ColorSensor.blue() >= Configuration.AutonomousLightTape){
                 hardware.M_FrontLeft.setPower(0);
                 hardware.M_FrontRight.setPower(0);
                 hardware.M_BackLeft.setPower(0);
                 hardware.M_BackRight.setPower(0);
             }
+            telemetry.addData("Red Color", hardware.ColorSensor.red());
+            telemetry.addData("Blue Color", hardware.ColorSensor.blue());
 
-            telemetry.addData("Light Detected", Light);
             telemetry.addData("Motor Distance-BL", hardware.M_BackLeft.getCurrentPosition());
             telemetry.addData("Motor Distance-BR", hardware.M_BackRight.getCurrentPosition());
             telemetry.addData("Motor Distance-FL", hardware.M_FrontLeft.getCurrentPosition());

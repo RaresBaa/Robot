@@ -42,8 +42,8 @@ public class Controlled02_Old extends LinearOpMode {
             telemetry.addData("Motor Power", drive);
             telemetry.addData("Motor Turn", turn);
 
-            double drive_fine = -gamepad2.left_stick_x / Configuration.joystickFINEsensitivity;
-            double turn_fine  =  gamepad2.left_stick_y / Configuration.joystickFINEsensitivity;
+            double drive_fine = -gamepad1.right_stick_x / Configuration.joystickFINEsensitivity;
+            double turn_fine  =  gamepad1.right_stick_y / Configuration.joystickFINEsensitivity;
             telemetry.addData("Motor Power-Fine", drive_fine);
             telemetry.addData("Motor Turn-Fine", turn_fine);
 
@@ -59,9 +59,15 @@ public class Controlled02_Old extends LinearOpMode {
             hardware.M_FrontRight.setPower(rightPower);
             //Control the arm from the joystick
             double armPower = Range.clip(-gamepad2.right_stick_x, -1.0, 1.0) ;
+            double armPowerFINE = Range.clip(-gamepad2.left_stick_x, -1.0, 1.0) ;
 
             telemetry.addData("Arm Power", armPower);
+            telemetry.addData("Arm Power FINE", armPowerFINE);
+            armPower += armPowerFINE;
 
+            armPower = Range.clip(armPower, -1.0, 1.0);
+
+            telemetry.addData("Final arm Power", armPower);
             hardware.M_ChainLeft.setPower(armPower);
             hardware.M_ChainRight.setPower(armPower);
 
@@ -108,7 +114,7 @@ public class Controlled02_Old extends LinearOpMode {
                     hardware.S_ClawExtender.setDirection(DcMotorSimple.Direction.REVERSE);
                 }
                 hardware.S_ClawExtender.setPower(1.0f);
-            }else{
+            }else {
                 hardware.S_ClawExtender.setPower(0.0f);
 
             }
