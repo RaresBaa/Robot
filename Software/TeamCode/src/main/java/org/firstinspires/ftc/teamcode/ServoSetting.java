@@ -19,22 +19,17 @@ public class ServoSetting extends LinearOpMode {
         while (opModeIsActive()) {
             if(gamepad1.dpad_up) {
                 pos += 0.1;
-                telemetry.addData("Servo pos:", pos);
-                telemetry.update();
             }else if(gamepad1.dpad_down) {
                 pos -= 0.1;
-                telemetry.addData("Servo pos:", pos);
-                telemetry.update();
             }else if(gamepad1.dpad_right) {
                 pos += 0.01;
-                telemetry.addData("Servo pos:", pos);
-                telemetry.update();
             }else if(gamepad1.dpad_left) {
                 pos -= 0.01;
-                telemetry.addData("Servo pos:", pos);
-                telemetry.update();
+
             }
             servo.setPosition(pos);
+            telemetry.addData("Servo pos:", pos);
+            telemetry.update();
         }
     }
 }

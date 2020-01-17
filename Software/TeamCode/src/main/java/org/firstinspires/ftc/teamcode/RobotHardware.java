@@ -79,11 +79,18 @@ public class RobotHardware {
         M_FL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         M_FR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+        //Enable Braking When Stationary
+        M_Lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        M_BL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        M_BR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        M_FL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        M_FR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         //Setting the Motor Direction, If needed
         M_Intake_Left.setDirection(DcMotor.Direction.REVERSE);
         S_Intake_Left.setDirection(Servo.Direction.REVERSE);
         S_Tray_Back.setDirection(Servo.Direction.REVERSE);
+
     }
     void Intake_Power(double pow){
         M_Intake_Right.setPower(pow);
