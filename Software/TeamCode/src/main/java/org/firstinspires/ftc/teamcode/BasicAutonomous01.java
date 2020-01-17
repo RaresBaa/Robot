@@ -82,13 +82,11 @@ public class BasicAutonomous01 extends LinearOpMode {
                 telemetry.addData("Visible Target", "none");
             }
 
-            telemetry.addData("Motor Distance-BL", hardware.M_BackLeft.getCurrentPosition());
-            telemetry.addData("Motor Distance-BR", hardware.M_BackRight.getCurrentPosition());
-            telemetry.addData("Motor Distance-FL", hardware.M_FrontLeft.getCurrentPosition());
-            telemetry.addData("Motor Distance-FR", hardware.M_FrontRight.getCurrentPosition());
-            telemetry.addData("Motor Distance-CL", hardware.M_ChainLeft.getCurrentPosition());
-            telemetry.addData("Motor Distance-CR", hardware.M_ChainRight.getCurrentPosition());
-
+            telemetry.addData("Motor Distance-BL", hardware.M_BL.getCurrentPosition());
+            telemetry.addData("Motor Distance-BR", hardware.M_BR.getCurrentPosition());
+            telemetry.addData("Motor Distance-FL", hardware.M_FL.getCurrentPosition());
+            telemetry.addData("Motor Distance-FR", hardware.M_FR.getCurrentPosition());
+            telemetry.addData("Motor Distance-CL", hardware.M_Lift.getCurrentPosition());
 
             telemetry.update();
         }

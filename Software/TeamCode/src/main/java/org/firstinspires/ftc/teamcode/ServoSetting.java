@@ -34,6 +34,7 @@ public class ServoSetting extends LinearOpMode {
                 telemetry.addData("Servo pos:", pos);
                 telemetry.update();
             }
+            servo.setPosition(pos);
         }
     }
 }
