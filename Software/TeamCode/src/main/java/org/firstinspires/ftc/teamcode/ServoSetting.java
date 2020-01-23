@@ -18,14 +18,18 @@ public class ServoSetting extends LinearOpMode {
         waitForStart();
         while (opModeIsActive()) {
             if(gamepad1.dpad_up) {
-                pos += 0.1;
+                pos += 0.1f;
             }else if(gamepad1.dpad_down) {
-                pos -= 0.1;
+                pos -= 0.1f;
             }else if(gamepad1.dpad_right) {
-                pos += 0.01;
+                pos += 0.01f;
             }else if(gamepad1.dpad_left) {
-                pos -= 0.01;
-
+                pos -= 0.01f;
+            }
+            try {
+                Thread.sleep(400);
+            }catch(InterruptedException e){
+                e.printStackTrace();
             }
             servo.setPosition(pos);
             telemetry.addData("Servo pos:", pos);

@@ -35,21 +35,28 @@ public class Drive extends LinearOpMode {
                 Left Joystick - Direction
                 Right Joystick -Fine Direction
                 Triggers control Rotation
-
+                Bumpers control Switching Sides
              */
-            float gamepad1LeftY = -gamepad1.left_stick_y;
-            float gamepad1LeftX = gamepad1.left_stick_x;
-            float gamepad1RightY = -gamepad1.right_stick_y;
-            float gamepad1RightX = gamepad1.right_stick_x;
+
+            if(gamepad1.left_bumper){
+                hardware.SideOne();
+            }
+            if(gamepad1.right_bumper){
+                hardware.SideTwo();
+            }
+
+            float gamepad1LeftY = AddDeaadZone(-gamepad1.left_stick_y);
+            float gamepad1LeftX = AddDeaadZone(gamepad1.left_stick_x);
+            float gamepad1RightY = AddDeaadZone(-gamepad1.right_stick_y);
+            float gamepad1RightX = AddDeaadZone(gamepad1.right_stick_x);
             float gamepad1LeftTrigger = gamepad1.left_trigger;
             float gamepad1RightTrigger = gamepad1.right_trigger;
             // holonomic formulas
 
             float PowY = gamepad1LeftY + gamepad1RightY/Configuration.FineControl;
-            float PowX = gamepad1LeftX + gamepad1RightX/Configuration.FineControl;
+            float PowX = -gamepad1LeftX - gamepad1RightX/Configuration.FineControl;
 
-            //TODO Rotation from joystick here
-            float turn = 0;
+            float turn = gamepad1LeftTrigger - gamepad1RightTrigger;
 
             float FrontLeft = -PowY - PowX - turn;
             float FrontRight = PowY - PowX - turn;
@@ -76,6 +83,8 @@ public class Drive extends LinearOpMode {
                 Right Bumper - Extend Ruleta
                 Left Bumper - Retract Ruleta
                 Joysticks-Arm Power
+                Right Trigger - Intake Power
+
              */
 
             double armPower = Range.clip(-gamepad2.right_stick_x, -1.0, 1.0) ;
@@ -83,6 +92,7 @@ public class Drive extends LinearOpMode {
             double ArmPowerFinal = Range.clip(armPower + armPowerFINE, -1.0, 1.0);
 
             hardware.M_Lift.setPower(ArmPowerFinal);
+            hardware.Intake_Power(gamepad2.right_trigger - gamepad2.left_trigger);
 
             if(gamepad2.a){
                 hardware.Lower_Intake();
@@ -109,6 +119,7 @@ public class Drive extends LinearOpMode {
             telemetry.addData("Lift Power", armPower);
             telemetry.addData("Lift Power FINE", armPowerFINE);
             telemetry.addData("Lift Power Final", ArmPowerFinal);
+            telemetry.addData("Intake Power", gamepad2.right_trigger - gamepad2.left_trigger);
             telemetry.addData("Joystick L-X", gamepad1LeftX);
             telemetry.addData("Joystick L-Y", gamepad1LeftY);
             telemetry.addData("Joystick R-X", gamepad1RightX);
@@ -131,6 +142,16 @@ public class Drive extends LinearOpMode {
         }
         telemetry.addData("Status", "Finished");
         telemetry.update();
+    }
+
+    float AddDeaadZone(float a){
+        if(a > Configuration.JoystickDeadZone){
+            return a;
+        }
+        if(a < -Configuration.JoystickDeadZone){
+            return a;
+        }
+        return 0;
     }
 
 }

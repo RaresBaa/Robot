@@ -87,10 +87,24 @@ public class RobotHardware {
         M_FR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         //Setting the Motor Direction, If needed
-        M_Intake_Left.setDirection(DcMotor.Direction.REVERSE);
-        S_Intake_Left.setDirection(Servo.Direction.REVERSE);
-        S_Tray_Back.setDirection(Servo.Direction.REVERSE);
+        M_Intake_Right.setDirection(DcMotor.Direction.REVERSE);
+        M_BL.setDirection(DcMotor.Direction.REVERSE);
+        M_BR.setDirection(DcMotor.Direction.REVERSE);
+        M_FR.setDirection(DcMotor.Direction.REVERSE);
+        M_FL.setDirection(DcMotor.Direction.REVERSE);
 
+    }
+    void SideOne(){
+        M_BL.setDirection(DcMotor.Direction.REVERSE);
+        M_BR.setDirection(DcMotor.Direction.REVERSE);
+        M_FR.setDirection(DcMotor.Direction.REVERSE);
+        M_FL.setDirection(DcMotor.Direction.REVERSE);
+    }
+    void SideTwo(){
+        M_BL.setDirection(DcMotor.Direction.FORWARD);
+        M_BR.setDirection(DcMotor.Direction.FORWARD);
+        M_FR.setDirection(DcMotor.Direction.FORWARD);
+        M_FL.setDirection(DcMotor.Direction.FORWARD);
     }
     void Intake_Power(double pow){
         M_Intake_Right.setPower(pow);
