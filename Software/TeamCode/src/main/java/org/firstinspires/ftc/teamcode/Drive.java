@@ -45,34 +45,19 @@ public class Drive extends LinearOpMode {
                 hardware.SideTwo();
             }
 
-            float gamepad1LeftY = AddDeaadZone(-gamepad1.left_stick_y);
-            float gamepad1LeftX = AddDeaadZone(gamepad1.left_stick_x);
-            float gamepad1RightY = AddDeaadZone(-gamepad1.right_stick_y);
-            float gamepad1RightX = AddDeaadZone(gamepad1.right_stick_x);
+            float gamepad1LeftY = AddDeadZone(-gamepad1.left_stick_y);
+            float gamepad1LeftX = AddDeadZone(gamepad1.left_stick_x);
+            float gamepad1RightY = AddDeadZone(-gamepad1.right_stick_y);
+            float gamepad1RightX = AddDeadZone(gamepad1.right_stick_x);
             float gamepad1LeftTrigger = gamepad1.left_trigger;
             float gamepad1RightTrigger = gamepad1.right_trigger;
-            // holonomic formulas
 
             float PowY = gamepad1LeftY + gamepad1RightY/Configuration.FineControl;
             float PowX = -gamepad1LeftX - gamepad1RightX/Configuration.FineControl;
 
             float turn = gamepad1LeftTrigger - gamepad1RightTrigger;
 
-            float FrontLeft = -PowY - PowX - turn;
-            float FrontRight = PowY - PowX - turn;
-            float BackRight = PowY + PowX - turn;
-            float BackLeft = -PowY + PowX - turn;
-
-            // clip the right/left values so that the values never exceed +/- 1
-            FrontRight = Range.clip(FrontRight, -1, 1);
-            FrontLeft = Range.clip(FrontLeft, -1, 1);
-            BackLeft = Range.clip(BackLeft, -1, 1);
-            BackRight = Range.clip(BackRight, -1, 1);
-
-            hardware.M_BL.setPower(BackLeft);
-            hardware.M_BR.setPower(BackRight);
-            hardware.M_FL.setPower(FrontLeft);
-            hardware.M_FR.setPower(FrontRight);
+            hardware.HolomnicDrive(PowX, PowY, turn);
 
             /*
                 Gamepad 2:
@@ -116,6 +101,7 @@ public class Drive extends LinearOpMode {
             }else{
                 hardware.S_Ruleta.setPower(0);
             }
+
             telemetry.addData("Lift Power", armPower);
             telemetry.addData("Lift Power FINE", armPowerFINE);
             telemetry.addData("Lift Power Final", ArmPowerFinal);
@@ -128,10 +114,10 @@ public class Drive extends LinearOpMode {
             telemetry.addData("Trigger 1-R", gamepad1RightTrigger);
             telemetry.addData("PowX", PowX);
             telemetry.addData("PowY", PowY);
-            telemetry.addData("M-Power BL", BackLeft);
-            telemetry.addData("M-Power BR", BackRight);
-            telemetry.addData("M-Power FL", FrontLeft);
-            telemetry.addData("M-Power FR", FrontRight);
+            telemetry.addData("M-Power BL", hardware.M_BL.getPower());
+            telemetry.addData("M-Power BR", hardware.M_BL.getPower());
+            telemetry.addData("M-Power FL", hardware.M_BL.getPower());
+            telemetry.addData("M-Power FR", hardware.M_BL.getPower());
             telemetry.addData("---------", "---------");
             telemetry.addData("M_BL", hardware.M_BL.getCurrentPosition());
             telemetry.addData("M_BR", hardware.M_BR.getCurrentPosition());
@@ -144,7 +130,7 @@ public class Drive extends LinearOpMode {
         telemetry.update();
     }
 
-    float AddDeaadZone(float a){
+    float AddDeadZone(float a){
         if(a > Configuration.JoystickDeadZone){
             return a;
         }
