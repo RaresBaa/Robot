@@ -21,7 +21,6 @@ public class Configuration {
     public static double S_Tray_Back_Down = 0.88;
 
     public static float FineControl = 4;
-    public static float JoystickDeadZone = 0.15f;
 
 }
 //fortza steaua fortza steaua hei hei

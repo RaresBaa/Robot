@@ -16,8 +16,11 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGREES;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XYZ;
@@ -49,7 +52,7 @@ public class RobotHardware {
 
     private VuforiaLocalizer.Parameters VuforiaParams;
     private List<VuforiaTrackable> AllObjects;
-    VuforiaLocalizer vuforia;
+    VuforiaLocalizer vuforia = null;
     boolean targetVisible;
     OpenGLMatrix lastLocation = null;
     VectorF translation;
@@ -169,10 +172,17 @@ public class RobotHardware {
     void InitVuforia(HardwareMap hwMap){
 
         WebcamName webcamName = hwMap.get(WebcamName.class, "webcam");
-
         int cameraMonitorViewId = hwMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hwMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters VuforiaParams = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
-        VuforiaParams.vuforiaLicenseKey = VuforiaKey.KEY;
+        //reading the Vuforia Key
+        try {
+            File myObj = new File("values/VuforiaKey.txt");
+            Scanner myReader = new Scanner(myObj);
+            VuforiaParams.vuforiaLicenseKey = myReader.nextLine();
+            myReader.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
         VuforiaParams.cameraName = webcamName;
 
         vuforia = ClassFactory.getInstance().createVuforia(VuforiaParams);
