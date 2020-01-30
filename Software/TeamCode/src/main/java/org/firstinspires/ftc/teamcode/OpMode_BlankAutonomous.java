@@ -11,7 +11,7 @@ import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 
 @Disabled
 @Autonomous(name="BlankAutonomous", group="Auto")
-public class BlankAutonomous extends LinearOpMode {
+public class OpMode_BlankAutonomous extends LinearOpMode {
 
     private ElapsedTime runtime = new ElapsedTime();
     private RobotHardware hardware = new RobotHardware();
@@ -39,7 +39,6 @@ public class BlankAutonomous extends LinearOpMode {
             telemetry.addData("Motor Distance-BR", hardware.M_BR.getCurrentPosition());
             telemetry.addData("Motor Distance-FL", hardware.M_FL.getCurrentPosition());
             telemetry.addData("Motor Distance-FR", hardware.M_FR.getCurrentPosition());
-            telemetry.addData("Motor Distance-CL", hardware.M_Lift.getCurrentPosition());
 
             telemetry.update();
         }

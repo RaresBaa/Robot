@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 @TeleOp(name="Drive", group="Controlled")
-public class Drive extends LinearOpMode {
+public class OpMode_Drive extends LinearOpMode {
 
     private ElapsedTime runtime = new ElapsedTime();
     RobotHardware hardware = new RobotHardware();
@@ -45,10 +45,10 @@ public class Drive extends LinearOpMode {
                 hardware.SideTwo();
             }
 
-            float gamepad1LeftY = AddDeadZone(-gamepad1.left_stick_y);
-            float gamepad1LeftX = AddDeadZone(gamepad1.left_stick_x);
-            float gamepad1RightY = AddDeadZone(-gamepad1.right_stick_y);
-            float gamepad1RightX = AddDeadZone(gamepad1.right_stick_x);
+            float gamepad1LeftY = -gamepad1.left_stick_y;
+            float gamepad1LeftX = gamepad1.left_stick_x;
+            float gamepad1RightY = -gamepad1.right_stick_y;
+            float gamepad1RightX = gamepad1.right_stick_x;
             float gamepad1LeftTrigger = gamepad1.left_trigger;
             float gamepad1RightTrigger = gamepad1.right_trigger;
 
@@ -128,16 +128,6 @@ public class Drive extends LinearOpMode {
         }
         telemetry.addData("Status", "Finished");
         telemetry.update();
-    }
-
-    float AddDeadZone(float a){
-        if(a > Configuration.JoystickDeadZone){
-            return a;
-        }
-        if(a < -Configuration.JoystickDeadZone){
-            return a;
-        }
-        return 0;
     }
 
 }

@@ -20,9 +20,6 @@ public class Configuration {
     public static double S_Tray_Back_UP = 0.11;
     public static double S_Tray_Back_Down = 0.88;
 
-    public static long Autonomous_Park_Sleep = 1500;
-    public static long Autonomous_Ruleta_Sleep = 4000;
-
     public static float FineControl = 4;
     public static float JoystickDeadZone = 0.15f;
 
