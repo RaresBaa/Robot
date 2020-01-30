@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp(name = "Servo setting", group = "Base")
-public class ServoSetting extends LinearOpMode {
+public class OpMode_ServoSetting extends LinearOpMode {
 
     @Override
     public void runOpMode() {
@@ -32,7 +32,7 @@ public class ServoSetting extends LinearOpMode {
                 e.printStackTrace();
             }
             servo.setPosition(pos);
-            telemetry.addData("Servo pos:", pos);
+            telemetry.addData("Servo pos:","%.3f", pos);
             telemetry.update();
         }
     }

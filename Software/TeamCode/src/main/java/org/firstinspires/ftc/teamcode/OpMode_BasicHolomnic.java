@@ -71,10 +71,10 @@ public class OpMode_BasicHolomnic extends LinearOpMode {
             float PowX = -gamepad1LeftX - gamepad1RightX/Configuration.FineControl;
             float turn = gamepad1LeftTrigger - gamepad1RightTrigger;
             HolomnicDrive(PowX, PowY, turn);
-            telemetry.addData("Motor Distance-BL", M_BL.getCurrentPosition());
-            telemetry.addData("Motor Distance-BR", M_BR.getCurrentPosition());
-            telemetry.addData("Motor Distance-FL", M_FL.getCurrentPosition());
-            telemetry.addData("Motor Distance-FR", M_FR.getCurrentPosition());
+            telemetry.addData("Motor Distance-BL","%.3f", M_BL.getCurrentPosition());
+            telemetry.addData("Motor Distance-BR","%.3f", M_BR.getCurrentPosition());
+            telemetry.addData("Motor Distance-FL","%.3f", M_FL.getCurrentPosition());
+            telemetry.addData("Motor Distance-FR","%.3f", M_FR.getCurrentPosition());
             telemetry.update();
         }
         telemetry.addData("Status", "Finished");
