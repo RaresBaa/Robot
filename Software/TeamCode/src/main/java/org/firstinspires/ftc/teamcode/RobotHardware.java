@@ -32,6 +32,8 @@ public class RobotHardware {
     DcMotor M_FL = null;
     DcMotor M_FR = null;
 
+    private int SwapDirection = 1;
+
     private DcMotor M_Intake_Left = null;
     private DcMotor M_Intake_Right = null;
 
@@ -77,14 +79,6 @@ public class RobotHardware {
 
         S_Ruleta = hwMap.get(CRServo.class, "S_Ruleta");
 
-        WebcamName webcamName = hwMap.get(WebcamName.class, "webcam");
-
-
-        int cameraMonitorViewId = hwMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hwMap.appContext.getPackageName());
-        VuforiaLocalizer.Parameters VuforiaParams = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
-        VuforiaParams.vuforiaLicenseKey = VuforiaKey.KEY;
-        VuforiaParams.cameraName = webcamName;
-
 
         //Reset Motor encoders
         M_Lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -117,12 +111,14 @@ public class RobotHardware {
 
     }
     void SideOne(){
+        SwapDirection = -1;
         M_BL.setDirection(DcMotor.Direction.REVERSE);
         M_BR.setDirection(DcMotor.Direction.REVERSE);
         M_FR.setDirection(DcMotor.Direction.REVERSE);
         M_FL.setDirection(DcMotor.Direction.REVERSE);
     }
     void SideTwo(){
+        SwapDirection = 1;
         M_BL.setDirection(DcMotor.Direction.FORWARD);
         M_BR.setDirection(DcMotor.Direction.FORWARD);
         M_FR.setDirection(DcMotor.Direction.FORWARD);
@@ -150,6 +146,9 @@ public class RobotHardware {
     }
 
     void HolomnicDrive(float PowX, float PowY, float turn){
+
+        turn = turn * SwapDirection;
+
         float FrontLeft = -PowY - PowX - turn;
         float FrontRight = PowY - PowX - turn;
         float BackRight = PowY + PowX - turn;
@@ -167,7 +166,15 @@ public class RobotHardware {
         M_FR.setPower(FrontRight);
     }
 
-    void InitVuforia(){
+    void InitVuforia(HardwareMap hwMap){
+
+        WebcamName webcamName = hwMap.get(WebcamName.class, "webcam");
+
+        int cameraMonitorViewId = hwMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hwMap.appContext.getPackageName());
+        VuforiaLocalizer.Parameters VuforiaParams = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+        VuforiaParams.vuforiaLicenseKey = VuforiaKey.KEY;
+        VuforiaParams.cameraName = webcamName;
+
         vuforia = ClassFactory.getInstance().createVuforia(VuforiaParams);
         // Load the data sets for the trackable objects.
         VuforiaTrackables targetsSkyStone = vuforia.loadTrackablesFromAsset("Skystone");
