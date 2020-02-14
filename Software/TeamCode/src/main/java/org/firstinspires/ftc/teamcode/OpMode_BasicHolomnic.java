@@ -2,23 +2,20 @@ package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-@Disabled
-@Autonomous(name="BasicHolomnic", group="Auto")
+@TeleOp(name="BasicHolomnic", group="Auto")
 public class OpMode_BasicHolomnic extends LinearOpMode {
 
     private ElapsedTime runtime = new ElapsedTime();
-    DcMotor M_BL = null;
-    DcMotor M_BR = null;
-    DcMotor M_FL = null;
-    DcMotor M_FR = null;
-    private int SwapDirection = 1;
+    private DcMotor M_BL = null;
+    private DcMotor M_BR = null;
+    private DcMotor M_FL = null;
+    private DcMotor M_FR = null;
 
     @Override
     public void runOpMode() {
@@ -71,18 +68,17 @@ public class OpMode_BasicHolomnic extends LinearOpMode {
             float PowX = -gamepad1LeftX - gamepad1RightX/Configuration.FineControl;
             float turn = gamepad1LeftTrigger - gamepad1RightTrigger;
             HolomnicDrive(PowX, PowY, turn);
-            telemetry.addData("Motor Distance-BL","%.3f", M_BL.getCurrentPosition());
-            telemetry.addData("Motor Distance-BR","%.3f", M_BR.getCurrentPosition());
-            telemetry.addData("Motor Distance-FL","%.3f", M_FL.getCurrentPosition());
-            telemetry.addData("Motor Distance-FR","%.3f", M_FR.getCurrentPosition());
+            telemetry.addData("Motor Distance-BL", M_BL.getCurrentPosition());
+            telemetry.addData("Motor Distance-BR", M_BR.getCurrentPosition());
+            telemetry.addData("Motor Distance-FL", M_FL.getCurrentPosition());
+            telemetry.addData("Motor Distance-FR", M_FR.getCurrentPosition());
             telemetry.update();
         }
         telemetry.addData("Status", "Finished");
         telemetry.update();
     }
 
-    void HolomnicDrive(float PowX, float PowY, float turn){
-        turn = turn * SwapDirection;
+    private void HolomnicDrive(float PowX, float PowY, float turn){
         float FrontLeft = -PowY - PowX - turn;
         float FrontRight = PowY - PowX - turn;
         float BackRight = PowY + PowX - turn;
@@ -97,15 +93,13 @@ public class OpMode_BasicHolomnic extends LinearOpMode {
         M_FL.setPower(FrontLeft);
         M_FR.setPower(FrontRight);
     }
-    void SideOne(){
-        SwapDirection = -1;
+    private void SideOne(){
         M_BL.setDirection(DcMotor.Direction.REVERSE);
         M_BR.setDirection(DcMotor.Direction.REVERSE);
         M_FR.setDirection(DcMotor.Direction.REVERSE);
         M_FL.setDirection(DcMotor.Direction.REVERSE);
     }
-    void SideTwo(){
-        SwapDirection = 1;
+    private void SideTwo(){
         M_BL.setDirection(DcMotor.Direction.FORWARD);
         M_BR.setDirection(DcMotor.Direction.FORWARD);
         M_FR.setDirection(DcMotor.Direction.FORWARD);

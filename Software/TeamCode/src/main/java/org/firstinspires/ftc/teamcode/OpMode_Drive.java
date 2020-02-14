@@ -4,9 +4,7 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
 
 @TeleOp(name="Drive", group="Controlled")
 public class OpMode_Drive extends LinearOpMode {
@@ -61,69 +59,28 @@ public class OpMode_Drive extends LinearOpMode {
 
             /*
                 Gamepad 2:
-                A-Lower Intake
-                B-Lift Intake
-                Dpad Up- Lift Tray
-                Dpad Down - Lower Tray
-                Right Bumper - Extend Ruleta
-                Left Bumper - Retract Ruleta
-                Joysticks-Arm Power
-                Right Trigger - Intake Power
 
              */
 
-            double armPower = Range.clip(-gamepad2.right_stick_x, -1.0, 1.0) ;
-            double armPowerFINE = Range.clip((-gamepad2.left_stick_x / Configuration.FineControl), -1.0, 1.0) ;
-            double ArmPowerFinal = Range.clip(armPower + armPowerFINE, -1.0, 1.0);
 
-            hardware.M_Lift.setPower(ArmPowerFinal);
-            hardware.Intake_Power(gamepad2.right_trigger - gamepad2.left_trigger);
-
-            if(gamepad2.a){
-                hardware.Lower_Intake();
-            }
-            if(gamepad2.b){
-                hardware.Lift_Intake();
-            }
-            if(gamepad2.dpad_up){
-                hardware.Lift_Tray();
-            }
-            if(gamepad2.dpad_down){
-                hardware.Lower_Tray();
-            }
-            if(gamepad2.right_bumper || gamepad2.left_bumper){
-                if(gamepad2.left_bumper){
-                    hardware.S_Ruleta.setDirection(DcMotorSimple.Direction.FORWARD);
-                }else{
-                    hardware.S_Ruleta.setDirection(DcMotorSimple.Direction.REVERSE);
-                }
-                hardware.S_Ruleta.setPower(1);
-            }else{
-                hardware.S_Ruleta.setPower(0);
-            }
-
-            telemetry.addData("Lift Power","%.3f", armPower);
-            telemetry.addData("Lift Power FINE","%.3f", armPowerFINE);
-            telemetry.addData("Lift Power Final","%.3f", ArmPowerFinal);
-            telemetry.addData("Intake Power","%.3f", gamepad2.right_trigger - gamepad2.left_trigger);
-            telemetry.addData("Joystick L-X", "%.3f",gamepad1LeftX);
-            telemetry.addData("Joystick L-Y","%.3f", gamepad1LeftY);
-            telemetry.addData("Joystick R-X","%.3f", gamepad1RightX);
-            telemetry.addData("Joystick R-Y","%.3f", gamepad1RightY);
-            telemetry.addData("Trigger 1-L","%.3f", gamepad1LeftTrigger);
-            telemetry.addData("Trigger 1-R","%.3f", gamepad1RightTrigger);
-            telemetry.addData("PowX","%.3f", PowX);
-            telemetry.addData("PowY","%.3f", PowY);
-            telemetry.addData("M-Power BL","%.3f", hardware.M_BL.getPower());
-            telemetry.addData("M-Power BR","%.3f", hardware.M_BL.getPower());
-            telemetry.addData("M-Power FL","%.3f", hardware.M_BL.getPower());
-            telemetry.addData("M-Power FR","%.3f", hardware.M_BL.getPower());
+            telemetry.addData("Intake Power", gamepad2.right_trigger - gamepad2.left_trigger);
+            telemetry.addData("Joystick L-X", gamepad1LeftX);
+            telemetry.addData("Joystick L-Y", gamepad1LeftY);
+            telemetry.addData("Joystick R-X", gamepad1RightX);
+            telemetry.addData("Joystick R-Y", gamepad1RightY);
+            telemetry.addData("Trigger 1-L", gamepad1LeftTrigger);
+            telemetry.addData("Trigger 1-R", gamepad1RightTrigger);
+            telemetry.addData("PowX", PowX);
+            telemetry.addData("PowY", PowY);
+            telemetry.addData("M-Power BL", hardware.M_BL.getPower());
+            telemetry.addData("M-Power BR", hardware.M_BL.getPower());
+            telemetry.addData("M-Power FL", hardware.M_BL.getPower());
+            telemetry.addData("M-Power FR", hardware.M_BL.getPower());
             telemetry.addData("---------", "---------");
-            telemetry.addData("M_BL","%.3f", hardware.M_BL.getCurrentPosition());
-            telemetry.addData("M_BR","%.3f", hardware.M_BR.getCurrentPosition());
-            telemetry.addData("M_FL","%.3f", hardware.M_FL.getCurrentPosition());
-            telemetry.addData("M_FR","%.3f", hardware.M_FR.getCurrentPosition());
-            telemetry.addData("M_Lift","%.3f", hardware.M_Lift.getCurrentPosition());
+            telemetry.addData("M_BL", hardware.M_BL.getCurrentPosition());
+            telemetry.addData("M_BR", hardware.M_BR.getCurrentPosition());
+            telemetry.addData("M_FL", hardware.M_FL.getCurrentPosition());
+            telemetry.addData("M_FR", hardware.M_FR.getCurrentPosition());
             telemetry.update();
         }
         telemetry.addData("Status", "Finished");

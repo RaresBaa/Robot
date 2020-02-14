@@ -32,20 +32,19 @@ public class RobotHardware {
     DcMotor M_FL = null;
     DcMotor M_FR = null;
 
-    private int SwapDirection = 1;
-
     private DcMotor M_Intake_Left = null;
     private DcMotor M_Intake_Right = null;
 
-    DcMotor M_Lift = null;
-
-    private Servo S_Intake_Left = null;
-    private Servo S_Intake_Right = null;
+    DcMotor M_LL = null;
+    DcMotor M_LR = null;
 
     private Servo S_Tray_Back = null;
     private Servo S_Tray_Front = null;
 
-    CRServo S_Ruleta = null;
+    private CRServo S_Claw_Left = null;
+    private CRServo S_Claw_Right = null;
+
+    private Servo S_Claw = null;
 
     private VuforiaLocalizer.Parameters VuforiaParams;
     private List<VuforiaTrackable> AllObjects;
@@ -69,34 +68,36 @@ public class RobotHardware {
         M_Intake_Left = hwMap.get(DcMotor.class, "M_Intake_Left");
         M_Intake_Right = hwMap.get(DcMotor.class, "M_Intake_Right");
 
-        M_Lift = hwMap.get(DcMotor.class, "M_Lift");
-
-        S_Intake_Left = hwMap.get(Servo.class, "S_Intake_Left");
-        S_Intake_Right = hwMap.get(Servo.class, "S_Intake_Right");
+        M_LL = hwMap.get(DcMotor.class, "M_LL");
+        M_LR = hwMap.get(DcMotor.class, "M_LR");
 
         S_Tray_Front = hwMap.get(Servo.class, "S_Tray_Front");
         S_Tray_Back = hwMap.get(Servo.class, "S_Tray_Back");
 
-        S_Ruleta = hwMap.get(CRServo.class, "S_Ruleta");
+        S_Claw_Left = hwMap.get(CRServo.class, "S_Claw_Left");
+        S_Claw_Right = hwMap.get(CRServo.class, "S_Claw_Right");
 
+        S_Claw = hwMap.get(Servo.class, "S_Claw");
 
         //Reset Motor encoders
-        M_Lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        M_LL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        M_LR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         M_BL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         M_BR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         M_FL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         M_FR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-
         //Enable Motor Encoders
-        M_Lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        M_LL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        M_LR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         M_BL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         M_BR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         M_FL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         M_FR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         //Enable Braking When Stationary
-        M_Lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        M_LL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        M_LR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         M_BL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         M_BR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         M_FL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -104,21 +105,16 @@ public class RobotHardware {
 
         //Setting the Motor Direction, If needed
         M_Intake_Right.setDirection(DcMotor.Direction.REVERSE);
-        M_BL.setDirection(DcMotor.Direction.REVERSE);
-        M_BR.setDirection(DcMotor.Direction.REVERSE);
-        M_FR.setDirection(DcMotor.Direction.REVERSE);
-        M_FL.setDirection(DcMotor.Direction.REVERSE);
+        M_LR.setDirection(DcMotor.Direction.REVERSE);
 
     }
     void SideOne(){
-        SwapDirection = -1;
         M_BL.setDirection(DcMotor.Direction.REVERSE);
         M_BR.setDirection(DcMotor.Direction.REVERSE);
         M_FR.setDirection(DcMotor.Direction.REVERSE);
         M_FL.setDirection(DcMotor.Direction.REVERSE);
     }
     void SideTwo(){
-        SwapDirection = 1;
         M_BL.setDirection(DcMotor.Direction.FORWARD);
         M_BR.setDirection(DcMotor.Direction.FORWARD);
         M_FR.setDirection(DcMotor.Direction.FORWARD);
@@ -128,14 +124,6 @@ public class RobotHardware {
         M_Intake_Right.setPower(pow);
         M_Intake_Left.setPower(pow);
     }
-    void Lift_Intake(){
-        S_Intake_Right.setPosition(Configuration.S_Intake_Right_Up);
-        S_Intake_Left.setPosition(Configuration.S_Intake_Left_Up);
-    }
-    void Lower_Intake(){
-        S_Intake_Right.setPosition(Configuration.S_Intake_Right_Down);
-        S_Intake_Left.setPosition(Configuration.S_Intake_Left_Down);
-    }
     void Lift_Tray(){
         S_Tray_Back.setPosition(Configuration.S_Tray_Back_UP);
         S_Tray_Front.setPosition(Configuration.S_Tray_Front_Up);
@@ -144,11 +132,14 @@ public class RobotHardware {
         S_Tray_Back.setPosition(Configuration.S_Tray_Back_Down);
         S_Tray_Front.setPosition(Configuration.S_Tray_Front_Down);
     }
+    void Open_Claw(){
+        S_Claw.setPosition(Configuration.S_Claw_Opened);
+    }
+    void Close_Claw(){
+        S_Claw.setPosition(Configuration.S_Claw_Closed);
+    }
 
     void HolomnicDrive(float PowX, float PowY, float turn){
-
-        turn = turn * SwapDirection;
-
         float FrontLeft = -PowY - PowX - turn;
         float FrontRight = PowY - PowX - turn;
         float BackRight = PowY + PowX - turn;
@@ -203,7 +194,6 @@ public class RobotHardware {
         }
         return "";
     }
-
     private List<VuforiaTrackable> getTrackables(VuforiaTrackables targetsSkyStone){
 
         final float mmPerInch = 25.4f;
@@ -273,5 +263,4 @@ public class RobotHardware {
 
         return allTrackables;
     }
-
 }
