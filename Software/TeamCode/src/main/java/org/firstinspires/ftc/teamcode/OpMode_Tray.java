@@ -3,15 +3,13 @@ package org.firstinspires.ftc.teamcode;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 
-@Disabled
-@Autonomous(name="BlankAutonomous", group="Auto")
-public class OpMode_BlankAutonomous extends LinearOpMode {
+@Autonomous(name="Tray", group="Auto")
+public class OpMode_Tray extends LinearOpMode {
 
     private ElapsedTime runtime = new ElapsedTime();
     private RobotHardware hardware = new RobotHardware();
@@ -26,6 +24,7 @@ public class OpMode_BlankAutonomous extends LinearOpMode {
         hardware.InitVuforia(hardwareMap);
         FtcDashboard dashboard = FtcDashboard.getInstance();
         telemetry = new MultipleTelemetry(telemetry, dashboard.getTelemetry());
+        FtcDashboard.getInstance().startCameraStream(hardware.vuforia, 0);
 
         //We aren't Waiting for play to be pressed
         //Only update Vuforia until play is pressed
@@ -40,10 +39,10 @@ public class OpMode_BlankAutonomous extends LinearOpMode {
             }else{//reset the runtime until playbutton is pressed
                 runtime.reset();
             }
-            telemetry.addData("Motor Distance-BL","%.3f", hardware.M_BL.getCurrentPosition());
-            telemetry.addData("Motor Distance-BR","%.3f", hardware.M_BR.getCurrentPosition());
-            telemetry.addData("Motor Distance-FL","%.3f", hardware.M_FL.getCurrentPosition());
-            telemetry.addData("Motor Distance-FR","%.3f", hardware.M_FR.getCurrentPosition());
+            telemetry.addData("Motor Distance-BL", hardware.M_BL.getCurrentPosition());
+            telemetry.addData("Motor Distance-BR", hardware.M_BR.getCurrentPosition());
+            telemetry.addData("Motor Distance-FL", hardware.M_FL.getCurrentPosition());
+            telemetry.addData("Motor Distance-FR", hardware.M_FR.getCurrentPosition());
             telemetry.update();
         }
         telemetry.addData("Status", "Finished");

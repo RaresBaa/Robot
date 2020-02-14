@@ -19,6 +19,7 @@ public class Configuration {
     public static double S_Claw_Closed = 0.4;
 
     public static float FineControl = 4;
+    public static int StepMultiplier = 10;
 
 }
 //fortza steaua fortza steaua hei hei

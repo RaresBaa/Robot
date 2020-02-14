@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
@@ -106,6 +107,7 @@ public class RobotHardware {
         //Setting the Motor Direction, If needed
         M_Intake_Right.setDirection(DcMotor.Direction.REVERSE);
         M_LR.setDirection(DcMotor.Direction.REVERSE);
+        S_Claw_Right.setDirection(DcMotorSimple.Direction.REVERSE);
 
     }
     void SideOne(){
@@ -137,6 +139,10 @@ public class RobotHardware {
     }
     void Close_Claw(){
         S_Claw.setPosition(Configuration.S_Claw_Closed);
+    }
+    void Claw_Extender(double pow){
+        S_Claw_Right.setPower(pow);
+        S_Claw_Left.setPower(pow);
     }
 
     void HolomnicDrive(float PowX, float PowY, float turn){
