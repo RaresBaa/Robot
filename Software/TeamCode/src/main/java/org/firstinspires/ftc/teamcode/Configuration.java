@@ -17,6 +17,13 @@ class Configuration {
 
     static final float FineControl = 4;
     static final int StepMultiplier = 10;
+    static final long Servo_Wait = 1000;
+
+    static final int Park_Steps = 1000;
+    static final int Rotate_Steps = 1000;
+    static final int Tray_Steps = 1000;
+    static final int Tray_Back_Steps = 1500;
+
 
 }
 //fortza steaua fortza steaua hei hei
