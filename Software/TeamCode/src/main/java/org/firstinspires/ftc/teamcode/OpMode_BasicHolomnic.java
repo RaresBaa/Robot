@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -19,8 +17,6 @@ public class OpMode_BasicHolomnic extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        FtcDashboard dashboard = FtcDashboard.getInstance();
-        telemetry = new MultipleTelemetry(telemetry, dashboard.getTelemetry());
         //Hardware to software mapping
         M_BL = hardwareMap.get(DcMotor.class, "M_BL");
         M_BR = hardwareMap.get(DcMotor.class, "M_BR");

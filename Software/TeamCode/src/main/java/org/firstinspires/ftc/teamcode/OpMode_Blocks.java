@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -14,17 +12,10 @@ public class OpMode_Blocks extends LinearOpMode{
     private ElapsedTime runtime = new ElapsedTime();
     private RobotHardware hardware = new RobotHardware();
 
-    //Vuforia Constants
-    private static final float mmPerInch = 25.4f;
-    private OpenGLMatrix lastLocation = null;
-
     @Override
     public void runOpMode(){
         hardware.init(hardwareMap);
         hardware.InitVuforia(hardwareMap);
-        FtcDashboard dashboard = FtcDashboard.getInstance();
-        telemetry = new MultipleTelemetry(telemetry, dashboard.getTelemetry());
-        FtcDashboard.getInstance().startCameraStream(hardware.vuforia, 0);
 
         //We aren't Waiting for play to be pressed
         //Only update Vuforia until play is pressed
