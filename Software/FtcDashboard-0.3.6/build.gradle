@@ -1,2 +1,0 @@
-configurations.maybeCreate("default")
-artifacts.add("default", file('FtcDashboard-0.3.6.aar'))
