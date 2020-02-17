@@ -1,12 +1,14 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-@TeleOp(name="BasicHolomnic", group="Auto")
+@Disabled
+@TeleOp(name="BasicHolomnic", group="Controlled")
 public class OpMode_BasicHolomnic extends LinearOpMode {
 
     private ElapsedTime runtime = new ElapsedTime();

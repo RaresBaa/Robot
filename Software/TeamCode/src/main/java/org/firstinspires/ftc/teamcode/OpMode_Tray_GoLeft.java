@@ -4,10 +4,9 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 
-@Autonomous(name="Tray", group="Auto")
-public class OpMode_Tray extends LinearOpMode {
+@Autonomous(name="Tray_GoLeft", group="Auto")
+public class OpMode_Tray_GoLeft extends LinearOpMode {
 
     private ElapsedTime runtime = new ElapsedTime();
     private RobotHardware hardware = new RobotHardware();
