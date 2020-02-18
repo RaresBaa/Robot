@@ -53,4 +53,28 @@ public class OpMode_Blocks_GoRight extends LinearOpMode{
             hardware.M_FL.setTargetPosition(Target[3]);
         }
     }
+    void GoTargetFront(int steps){
+        Target[0] += steps;
+        Target[1] += steps;
+        Target[2] += steps;
+        Target[3] += steps;
+    }
+    void GoTargetBack(int steps){
+        Target[0] -= steps;
+        Target[1] -= steps;
+        Target[2] -= steps;
+        Target[3] -= steps;
+    }
+    void GoTargetLeft(int steps){
+        Target[0] -= steps;
+        Target[1] += steps;
+        Target[2] += steps;
+        Target[3] -= steps;
+    }
+    void GoTargetRight(int steps){
+        Target[0] += steps;
+        Target[1] -= steps;
+        Target[2] -= steps;
+        Target[3] += steps;
+    }
 }

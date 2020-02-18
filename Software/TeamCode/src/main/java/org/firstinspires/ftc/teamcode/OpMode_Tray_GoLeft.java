@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import java.lang.annotation.Target;
 
 
-@Autonomous(name="Tray_GoLeft", group="Auto")
+@Autonomous(name="Tray_GoLeft_RED", group="Auto")
 public class OpMode_Tray_GoLeft extends LinearOpMode {
 
     private ElapsedTime runtime = new ElapsedTime();
@@ -27,10 +27,7 @@ public class OpMode_Tray_GoLeft extends LinearOpMode {
         Target[2] = hardware.M_FR.getCurrentPosition();
         Target[3] = hardware.M_FL.getCurrentPosition();
         //Go Forward to the tray (Go to the Left Side)
-        Target[0] += Configuration.Tray_Steps;
-        Target[1] -= Configuration.Tray_Steps;
-        Target[2] -= Configuration.Tray_Steps;
-        Target[3] += Configuration.Tray_Steps;
+        GoTargetLeft(Configuration.Tray_Steps);
         WaitForTarget();
         LogTelemetery();
         //Lower Tray Servos
@@ -40,11 +37,8 @@ public class OpMode_Tray_GoLeft extends LinearOpMode {
         }catch (InterruptedException e){
             e.printStackTrace();
         }
-        //Go Back With the Tray(Go to the Right Side)
-        Target[0] -= Configuration.Tray_Back_Steps;
-        Target[1] += Configuration.Tray_Back_Steps;
-        Target[2] += Configuration.Tray_Back_Steps;
-        Target[3] -= Configuration.Tray_Back_Steps;
+        //Go Back With the Tray(Go to the Left Side)
+        GoTargetRight(Configuration.Tray_Back_Steps);
         WaitForTarget();
         LogTelemetery();
         //Lift Tray Servos
@@ -54,7 +48,10 @@ public class OpMode_Tray_GoLeft extends LinearOpMode {
         }catch (InterruptedException e){
             e.printStackTrace();
         }
-        //TODO: Finish Movements
+        //Park
+        GoTargetBack(Configuration.Park_Steps);
+        WaitForTarget();
+        LogTelemetery();
 
         while (opModeIsActive()) {//Main Loop
             LogTelemetery();
@@ -77,5 +74,29 @@ public class OpMode_Tray_GoLeft extends LinearOpMode {
             hardware.M_FR.setTargetPosition(Target[2]);
             hardware.M_FL.setTargetPosition(Target[3]);
         }
+    }
+    void GoTargetFront(int steps){
+        Target[0] += steps;
+        Target[1] += steps;
+        Target[2] += steps;
+        Target[3] += steps;
+    }
+    void GoTargetBack(int steps){
+        Target[0] -= steps;
+        Target[1] -= steps;
+        Target[2] -= steps;
+        Target[3] -= steps;
+    }
+    void GoTargetLeft(int steps){
+        Target[0] -= steps;
+        Target[1] += steps;
+        Target[2] += steps;
+        Target[3] -= steps;
+    }
+    void GoTargetRight(int steps){
+        Target[0] += steps;
+        Target[1] -= steps;
+        Target[2] -= steps;
+        Target[3] += steps;
     }
 }
