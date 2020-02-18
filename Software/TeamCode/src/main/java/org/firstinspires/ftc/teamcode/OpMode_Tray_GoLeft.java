@@ -4,8 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import java.lang.annotation.Target;
-
+//Tray grab and park for the RED side. Set the robot with the servos facing the tray
 
 @Autonomous(name="Tray_GoLeft_RED", group="Auto")
 public class OpMode_Tray_GoLeft extends LinearOpMode {

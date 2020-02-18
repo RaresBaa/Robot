@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+//Simple autonomous parking mode. Set the robot facing toward the park line.
 
 @Autonomous(name="Park_Forward", group="Auto")
 public class OpMode_Park extends LinearOpMode {

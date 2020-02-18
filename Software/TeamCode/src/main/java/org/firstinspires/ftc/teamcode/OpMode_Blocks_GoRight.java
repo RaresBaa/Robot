@@ -4,10 +4,13 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import java.lang.annotation.Target;
+import static org.firstinspires.ftc.teamcode.Configuration.*;
 
+//This OpMode moves block from one side to another.The robot must be facing towards the wall
 
-@Autonomous(name="Blocks_GoRight", group="Auto")
+//Left-Blocks  Right-Tray
+
+@Autonomous(name="Blocks_GoRight_BLUE", group="Auto")
 public class OpMode_Blocks_GoRight extends LinearOpMode{
 
     private ElapsedTime runtime = new ElapsedTime();
@@ -17,21 +20,102 @@ public class OpMode_Blocks_GoRight extends LinearOpMode{
     @Override
     public void runOpMode(){
         hardware.init(hardwareMap);
-        hardware.InitVuforia(hardwareMap);
 
-        //We aren't Waiting for play to be pressed
-        //Only update Vuforia until play is pressed
+        waitForStart();
+        runtime.reset();
+        LogTelemetery();
+        Target[0] = hardware.M_BR.getCurrentPosition();
+        Target[1] = hardware.M_BL.getCurrentPosition();
+        Target[2] = hardware.M_FR.getCurrentPosition();
+        Target[3] = hardware.M_FL.getCurrentPosition();
+        //go forward to the blocks
+        GoTargetBack(Block_Steps_Initial);
+        WaitForTarget();
+        LogTelemetery();
+        //activate intake
+        hardware.Intake_Power(1);
+        //go to the block
+        GoTargetBack(Block_Steps_Back_Forth);
+        WaitForTarget();
+        LogTelemetery();
+        //deactivate intake
+        hardware.Intake_Power(0);
+        //go back with the block
+        GoTargetFront(Block_Steps_Back_Forth);
+        WaitForTarget();
+        LogTelemetery();
+        //go to the other side
+        GoTargetRight(Block_Steps_Distance);
+        WaitForTarget();
+        LogTelemetery();
+        //drop the block off
+        hardware.Intake_Power(-1);
+        try{
+            wait(Block_Drop_Time);
+        }catch (InterruptedException e){
+            e.printStackTrace();
+        }
+        hardware.Intake_Power(0);
+        //go to the other side + one block distance
+        GoTargetLeft(Block_Steps_Distance + Block_Steps_Between);
+        WaitForTarget();
+        LogTelemetery();
+        //activate intake
+        hardware.Intake_Power(1);
+        //go to the block
+        GoTargetBack(Block_Steps_Back_Forth);
+        WaitForTarget();
+        LogTelemetery();
+        //deactivate intake
+        hardware.Intake_Power(0);
+        //go back with the block
+        GoTargetFront(Block_Steps_Back_Forth);
+        WaitForTarget();
+        LogTelemetery();
+        //go to the other side + one block distance
+        GoTargetRight(Block_Steps_Distance + Block_Steps_Between);
+        WaitForTarget();
+        LogTelemetery();
+        //drop the block off
+        hardware.Intake_Power(-1);
+        try{
+            wait(Block_Drop_Time);
+        }catch (InterruptedException e){
+            e.printStackTrace();
+        }
+        hardware.Intake_Power(0);
+        //go to the other side + two block distance
+        GoTargetLeft(Block_Steps_Distance + 2 * Block_Steps_Between);
+        WaitForTarget();
+        LogTelemetery();
+        //activate intake
+        hardware.Intake_Power(1);
+        //go to the block
+        GoTargetBack(Block_Steps_Back_Forth);
+        WaitForTarget();
+        LogTelemetery();
+        //deactivate intake
+        hardware.Intake_Power(0);
+        //go back with the block
+        GoTargetFront(Block_Steps_Back_Forth);
+        WaitForTarget();
+        LogTelemetery();
+        //go to the other side + two block distance
+        GoTargetRight(Block_Steps_Distance + 2 * Block_Steps_Between);
+        WaitForTarget();
+        LogTelemetery();
+        //drop the block off
+        hardware.Intake_Power(-1);
+        try{
+            wait(Block_Drop_Time);
+        }catch (InterruptedException e){
+            e.printStackTrace();
+        }
+        hardware.Intake_Power(0);
+        //Park
+        GoTargetFront(Block_Park_Distance);
+        WaitForTarget();
         while (opModeIsActive()) {//Main Loop
-            telemetry.addData("Visible Object", hardware.VuforiaTrack());
-            telemetry.addData("Pos (cm)", "{X, Y, Z} = %.1f, %.1f, %.1f", hardware.translation.get(0), hardware.translation.get(1), hardware.translation.get(2));
-            telemetry.addData("Rot (deg)", "{Roll, Pitch, Heading} = %.0f, %.0f, %.0f", hardware.rotation.firstAngle, hardware.rotation.secondAngle, hardware.rotation.thirdAngle);
-            if(isStarted()){//If Play button has been pressed
-
-
-
-            }else{//reset the runtime until playbutton is pressed
-                runtime.reset();
-            }
             LogTelemetery();
         }
         telemetry.addData("Status", "Finished");
