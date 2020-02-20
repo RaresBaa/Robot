@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 //Tray grab and park for the RED side. Set the robot with the servos facing the tray
@@ -11,7 +12,7 @@ public class OpMode_Tray_GoLeft extends LinearOpMode {
 
     private ElapsedTime runtime = new ElapsedTime();
     private RobotHardware hardware = new RobotHardware();
-    private int Target[];
+    private int Target[] = new int[4];
 
     @Override
     public void runOpMode() {
@@ -27,29 +28,21 @@ public class OpMode_Tray_GoLeft extends LinearOpMode {
         Target[3] = hardware.M_FL.getCurrentPosition();
         //Go Forward to the tray (Go to the Left Side)
         GoTargetLeft(Configuration.Tray_Steps);
-        WaitForTarget();
+        GoToPosition();
         LogTelemetery();
         //Lower Tray Servos
         hardware.Lower_Tray();
-        try {
-            wait(Configuration.Servo_Wait);
-        }catch (InterruptedException e){
-            e.printStackTrace();
-        }
+        sleep(Configuration.Servo_Wait);
         //Go Back With the Tray(Go to the Left Side)
         GoTargetRight(Configuration.Tray_Back_Steps);
-        WaitForTarget();
+        GoToPosition();
         LogTelemetery();
         //Lift Tray Servos
         hardware.Lift_Tray();
-        try {
-            wait(Configuration.Servo_Wait);
-        }catch (InterruptedException e){
-            e.printStackTrace();
-        }
+        sleep(Configuration.Servo_Wait);
         //Park
         GoTargetBack(Configuration.Park_Steps);
-        WaitForTarget();
+        GoToPosition();
         LogTelemetery();
 
         while (opModeIsActive()) {//Main Loop
@@ -65,37 +58,53 @@ public class OpMode_Tray_GoLeft extends LinearOpMode {
         telemetry.addData("Motor Distance-FR", hardware.M_FR.getCurrentPosition());
         telemetry.update();
     }
-    void WaitForTarget(){
-        while(hardware.M_BR.getCurrentPosition() != Target[0] || hardware.M_BL.getCurrentPosition() != Target[1] ||
-                hardware.M_FR.getCurrentPosition() != Target[2] || hardware.M_FL.getCurrentPosition() != Target[3]){
-            hardware.M_BR.setTargetPosition(Target[0]);
-            hardware.M_BL.setTargetPosition(Target[1]);
-            hardware.M_FR.setTargetPosition(Target[2]);
-            hardware.M_FL.setTargetPosition(Target[3]);
+    private void GoToPosition(){
+        hardware.M_BR.setTargetPosition(Target[0]);
+        hardware.M_BL.setTargetPosition(Target[1]);
+        hardware.M_FR.setTargetPosition(Target[2]);
+        hardware.M_FL.setTargetPosition(Target[3]);
+
+        hardware.M_BR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        hardware.M_BL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        hardware.M_FR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        hardware.M_FL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        hardware.M_BR.setPower(1);
+        hardware.M_BL.setPower(1);
+        hardware.M_FR.setPower(1);
+        hardware.M_FL.setPower(1);
+
+        while(hardware.M_BR.isBusy() || hardware.M_BL.isBusy() || hardware.M_FR.isBusy() || hardware.M_FL.isBusy()){
+            LogTelemetery();
         }
+        hardware.M_BR.setPower(0);
+        hardware.M_BL.setPower(0);
+        hardware.M_FR.setPower(0);
+        hardware.M_FL.setPower(0);
+
     }
     void GoTargetFront(int steps){
         Target[0] += steps;
-        Target[1] += steps;
+        Target[1] -= steps;
         Target[2] += steps;
-        Target[3] += steps;
+        Target[3] -= steps;
     }
     void GoTargetBack(int steps){
         Target[0] -= steps;
-        Target[1] -= steps;
+        Target[1] += steps;
+        Target[2] -= steps;
+        Target[3] += steps;
+    }
+    void GoTargetRight(int steps){
+        Target[0] += steps;
+        Target[1] += steps;
         Target[2] -= steps;
         Target[3] -= steps;
     }
     void GoTargetLeft(int steps){
         Target[0] -= steps;
-        Target[1] += steps;
-        Target[2] += steps;
-        Target[3] -= steps;
-    }
-    void GoTargetRight(int steps){
-        Target[0] += steps;
         Target[1] -= steps;
-        Target[2] -= steps;
+        Target[2] += steps;
         Target[3] += steps;
     }
 }

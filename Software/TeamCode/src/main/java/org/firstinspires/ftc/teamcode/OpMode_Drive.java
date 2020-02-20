@@ -30,6 +30,9 @@ public class OpMode_Drive extends LinearOpMode {
                 Right Joystick -Fine Direction
                 Triggers control Rotation
                 Bumpers control Switching Sides
+
+                y- intake in
+                x -intake out
              */
 
             if(gamepad1.left_bumper){
@@ -37,6 +40,13 @@ public class OpMode_Drive extends LinearOpMode {
             }
             if(gamepad1.right_bumper){
                 hardware.SideTwo();
+            }
+            if(gamepad1.y){
+                hardware.Intake_Power(1);
+            }else if(gamepad1.x){
+                hardware.Intake_Power(-1);
+            }else{
+                hardware.Intake_Power(0);
             }
 
             float gamepad1LeftY = -gamepad1.left_stick_y;
@@ -47,9 +57,9 @@ public class OpMode_Drive extends LinearOpMode {
             float gamepad1RightTrigger = gamepad1.right_trigger;
 
             float PowY = gamepad1LeftY + gamepad1RightY/Configuration.FineControl;
-            float PowX = -gamepad1LeftX - gamepad1RightX/Configuration.FineControl;
+            float PowX = gamepad1LeftX + gamepad1RightX/Configuration.FineControl;
 
-            float turn = gamepad1LeftTrigger - gamepad1RightTrigger;
+            float turn = gamepad1RightTrigger - gamepad1LeftTrigger;
 
             hardware.HolomnicDrive(PowX, PowY, turn);
 
@@ -64,9 +74,9 @@ public class OpMode_Drive extends LinearOpMode {
                 Right Stick X - Claw Extender
 
              */
-            int AddStep = (int)(gamepad2.left_stick_x * Configuration.StepMultiplier);
-            hardware.M_LL.setTargetPosition(hardware.M_LL.getCurrentPosition() + AddStep);
-            hardware.M_LR.setTargetPosition(hardware.M_LR.getCurrentPosition() + AddStep);
+
+            hardware.M_LL.setPower(gamepad2.left_stick_x);
+            hardware.M_LR.setPower(gamepad2.left_stick_x);
 
             hardware.Claw_Extender(gamepad2.right_stick_x);
 
@@ -92,7 +102,6 @@ public class OpMode_Drive extends LinearOpMode {
             telemetry.addData("Trigger 1-R", gamepad1RightTrigger);
             telemetry.addData("PowX", PowX);
             telemetry.addData("PowY", PowY);
-            telemetry.addData("Lift Step", AddStep);
             telemetry.addData("Claw Extender Power", gamepad2.right_stick_x);
             telemetry.addLine();
             telemetry.addData("M-Power BL", hardware.M_BL.getPower());
